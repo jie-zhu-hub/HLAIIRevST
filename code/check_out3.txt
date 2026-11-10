@@ -1,0 +1,5315 @@
+../data/hlaii
+Model Parameter Configuration
+  pep_max_len: 25
+  hla_alpha_max_len: 15
+  hla_beta_max_len: 19
+  tcr_max_len: 30
+  batch_size: 256
+  epochs: 200
+  threshold: 0.5
+  device: cuda
+  alpha: 0.3
+  gamma: 3.0
+  lr: 0.0001
+  output_dir: ./checkpoints/hlaii_lora/seed_20220909
+  d_model: 64
+  e_layers: 3
+  dim: 64
+  n_heads: 8
+  sigma: 1.0
+  window_size: 3
+  d_ff: 512
+  interact_layers: 1
+  d_layers: 1
+  ae: 3
+  data_dir: ../data/
+  data_name: hlaii
+  dropout: 0.3
+  weight_decay: 0.0
+  oversample: hybrid
+  train_fraction: 1.0
+  train_subset_seed: 20220909
+  HLA_fusion: concat+attention
+  debug: False
+  num_workers: 4
+  hla_orientation: alpha_reverse
+  hla_alpha_direction: None
+  ablate_input: none
+  hla_core_ablation: full
+  core_shuffle_seed: 20220909
+  seed: 20220909
+  pretrained_ckpt: ./checkpoints/base_checkpoint/HLAIIRevST_base_checkpoint.pkl
+  ignore_pretrained_projection: False
+  strict_pretrained_load: False
+  adaptation_mode: lora
+  use_lora: True
+  lora_r: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  lora_target_group: full
+  lora_targets: W_Q,W_K,W_V,W_Q_v,W_K_v,W_V_v,fc,linear1,linear2,out_proj,feed_forward.0,feed_forward.3,ffn.0,ffn.3,proj
+                ection.0,projection.3,projection.5
+  lora_train_projection: True
+  lora_train_bias: none
+  train_fraction_tag: 100
+  dataset_suffix: (-)
+  train_file: ../data/hlaii/train_data(-).csv
+  val_file: ../data/hlaii/val_data(-).csv
+  test_file: ../data/hlaii/test_data(-).csv
+[Data]  test -> ../data/hlaii/test_data(-).csv
+[Data] train -> ../data/hlaii/train_data(-).csv
+Hybrid oversampling: original positive samples 1282 -> after augmentation 11797
+[Data]   val -> ../data/hlaii/val_data(-).csv
+3 Label info: Train = Counter({0: 11797, 1: 11797}) | Val = Counter({0: 2949, 1: 321})
+-----Compile model-----
+[Warning] Skipping 1 keys with mismatched shapes (initialized model values will be used):
+  pep_encoder.pos_encoder.pe: ckpt=(1, 11, 64) vs model=(1, 25, 64)
+================================================================================
+Loaded pretrained checkpoint: ./checkpoints/base_checkpoint/HLAIIRevST_base_checkpoint.pkl
+Missing keys   (1): ['pep_encoder.pos_encoder.pe']
+Unexpected keys(0): []
+================================================================================
+================================================================================
+LoRA modules injected:
+  - attn_fusion.self_attn.out_proj
+  - attn_fusion.linear1
+  - attn_fusion.linear2
+  - pep_encoder.layers.0.self_attn.out_proj
+  - pep_encoder.layers.0.feed_forward.0
+  - pep_encoder.layers.0.feed_forward.3
+  - pep_encoder.layers.1.self_attn.out_proj
+  - pep_encoder.layers.1.feed_forward.0
+  - pep_encoder.layers.1.feed_forward.3
+  - pep_encoder.layers.2.self_attn.out_proj
+  - pep_encoder.layers.2.feed_forward.0
+  - pep_encoder.layers.2.feed_forward.3
+  - binaryInteraction.layers.0.dual_att.W_Q
+  - binaryInteraction.layers.0.dual_att.W_K
+  - binaryInteraction.layers.0.dual_att.W_V
+  - binaryInteraction.layers.0.dual_att.fc
+  - binaryInteraction.layers.0.dual_att.W_Q_v
+  - binaryInteraction.layers.0.dual_att.W_K_v
+  - binaryInteraction.layers.0.dual_att.W_V_v
+  - binaryInteraction.layers.0.dual_att.fc_v
+  - binaryInteraction.layers.0.pep_ffn.fc.0
+  - binaryInteraction.layers.0.pep_ffn.fc.2
+  - binaryInteraction.layers.0.hla_ffn.fc.0
+  - binaryInteraction.layers.0.hla_ffn.fc.2
+  - ternaryInteraction.layers.0.dual_att.W_Q
+  - ternaryInteraction.layers.0.dual_att.W_K
+  - ternaryInteraction.layers.0.dual_att.W_V
+  - ternaryInteraction.layers.0.dual_att.fc
+  - ternaryInteraction.layers.0.dual_att.W_Q_v
+  - ternaryInteraction.layers.0.dual_att.W_K_v
+  - ternaryInteraction.layers.0.dual_att.W_V_v
+  - ternaryInteraction.layers.0.dual_att.fc_v
+  - ternaryInteraction.layers.0.pep_ffn.fc.0
+  - ternaryInteraction.layers.0.pep_ffn.fc.2
+  - ternaryInteraction.layers.0.hla_ffn.fc.0
+  - ternaryInteraction.layers.0.hla_ffn.fc.2
+  - decoder.layers.0.pep_self_attn.W_Q
+  - decoder.layers.0.pep_self_attn.W_V
+  - decoder.layers.0.pep_self_attn.fc
+  - decoder.layers.0.tcr2pep_attn.W_Q
+  - decoder.layers.0.tcr2pep_attn.W_V
+  - decoder.layers.0.tcr2pep_attn.fc
+  - decoder.layers.0.tcr2pep2hla_attn.W_Q
+  - decoder.layers.0.tcr2pep2hla_attn.W_V
+  - decoder.layers.0.tcr2pep2hla_attn.fc
+  - decoder.layers.0.pep_pos_ffn.fc.0
+  - decoder.layers.0.pep_pos_ffn.fc.2
+  - decoder.layers.0.tcr2hla_pos_ffn.fc.0
+  - decoder.layers.0.tcr2hla_pos_ffn.fc.2
+  - projection.0
+  - projection.3
+  - projection.5
+================================================================================
+================================================================================
+Total params     : 2,068,626
+Trainable params : 284,626
+Trainable ratio  : 13.7592%
+================================================================================
+-----Train-----
+output_dir: ./checkpoints/hlaii_lora/seed_20220909
+path_saver: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-1/200 | Loss = 0.0414
+******* Training  *******
+tn = 706, fp = 11091, fn = 682, tp = 11115
+y_pred: 0 = 1388 | 1 = 22206
+y_true: 0 = 11797 | 1 = 11797
+auc=0.5237|aupr=0.5160|ppvn=0.5219
+
+3 ****Validation  Epoch-1/200: Loss = 0.039438
+******* Validation  *******
+tn = 34, fp = 2915, fn = 2, tp = 319
+y_pred: 0 = 36 | 1 = 3234
+y_true: 0 = 2949 | 1 = 321
+auc=0.5989|aupr=0.1353|ppvn=0.1277
+
+3 ****Test-1  Epoch-1/200: Loss = 0.042544
+******* Test-1  *******
+tn = 0, fp = 203, fn = 0, tp = 20
+y_pred: 0 = 0 | 1 = 223
+y_true: 0 = 203 | 1 = 20
+auc=0.4394|aupr=0.0759|ppvn=0.0500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.05 @ epoch 1
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch1_PPVN0p050000.pkl
+[Best Model Updated] Val-AUPR primary: 0.13527779054239442 @ epoch 1
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch1_AUPR0p135278.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-2/200 | Loss = 0.0385
+******* Training  *******
+tn = 26, fp = 11771, fn = 13, tp = 11784
+y_pred: 0 = 39 | 1 = 23555
+y_true: 0 = 11797 | 1 = 11797
+auc=0.5806|aupr=0.5535|ppvn=0.5588
+
+3 ****Validation  Epoch-2/200: Loss = 0.036799
+******* Validation  *******
+tn = 96, fp = 2853, fn = 2, tp = 319
+y_pred: 0 = 98 | 1 = 3172
+y_true: 0 = 2949 | 1 = 321
+auc=0.6798|aupr=0.1661|ppvn=0.1153
+
+3 ****Test-1  Epoch-2/200: Loss = 0.041015
+******* Test-1  *******
+tn = 1, fp = 202, fn = 0, tp = 20
+y_pred: 0 = 1 | 1 = 222
+y_true: 0 = 203 | 1 = 20
+auc=0.4308|aupr=0.0748|ppvn=0.0500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.16613824298682484 @ epoch 2
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch2_AUPR0p166138.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-3/200 | Loss = 0.0374
+******* Training  *******
+tn = 295, fp = 11502, fn = 49, tp = 11748
+y_pred: 0 = 344 | 1 = 23250
+y_true: 0 = 11797 | 1 = 11797
+auc=0.6531|aupr=0.6131|ppvn=0.6115
+
+3 ****Validation  Epoch-3/200: Loss = 0.035845
+******* Validation  *******
+tn = 629, fp = 2320, fn = 9, tp = 312
+y_pred: 0 = 638 | 1 = 2632
+y_true: 0 = 2949 | 1 = 321
+auc=0.7812|aupr=0.2183|ppvn=0.2866
+
+3 ****Test-1  Epoch-3/200: Loss = 0.043596
+******* Test-1  *******
+tn = 11, fp = 192, fn = 3, tp = 17
+y_pred: 0 = 14 | 1 = 209
+y_true: 0 = 203 | 1 = 20
+auc=0.4379|aupr=0.0897|ppvn=0.0500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.21826237528598055 @ epoch 3
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch3_AUPR0p218262.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-4/200 | Loss = 0.0336
+******* Training  *******
+tn = 3683, fp = 8114, fn = 452, tp = 11345
+y_pred: 0 = 4135 | 1 = 19459
+y_true: 0 = 11797 | 1 = 11797
+auc=0.7551|aupr=0.7132|ppvn=0.6813
+
+3 ****Validation  Epoch-4/200: Loss = 0.031698
+******* Validation  *******
+tn = 1522, fp = 1427, fn = 17, tp = 304
+y_pred: 0 = 1539 | 1 = 1731
+y_true: 0 = 2949 | 1 = 321
+auc=0.8282|aupr=0.3119|ppvn=0.3520
+
+3 ****Test-1  Epoch-4/200: Loss = 0.046496
+******* Test-1  *******
+tn = 47, fp = 156, fn = 6, tp = 14
+y_pred: 0 = 53 | 1 = 170
+y_true: 0 = 203 | 1 = 20
+auc=0.5251|aupr=0.1378|ppvn=0.1500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.15 @ epoch 4
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch4_PPVN0p150000.pkl
+[Best Model Updated] Val-AUPR primary: 0.31193654710621493 @ epoch 4
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch4_AUPR0p311937.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-5/200 | Loss = 0.0298
+******* Training  *******
+tn = 5738, fp = 6059, fn = 611, tp = 11186
+y_pred: 0 = 6349 | 1 = 17245
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8157|aupr=0.7746|ppvn=0.7329
+
+3 ****Validation  Epoch-5/200: Loss = 0.028853
+******* Validation  *******
+tn = 1702, fp = 1247, fn = 9, tp = 312
+y_pred: 0 = 1711 | 1 = 1559
+y_true: 0 = 2949 | 1 = 321
+auc=0.8803|aupr=0.3599|ppvn=0.4081
+
+3 ****Test-1  Epoch-5/200: Loss = 0.045998
+******* Test-1  *******
+tn = 61, fp = 142, fn = 5, tp = 15
+y_pred: 0 = 66 | 1 = 157
+y_true: 0 = 203 | 1 = 20
+auc=0.6626|aupr=0.2504|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.3 @ epoch 5
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch5_PPVN0p300000.pkl
+[Best Model Updated] Val-AUPR primary: 0.3599119484687634 @ epoch 5
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch5_AUPR0p359912.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-6/200 | Loss = 0.0270
+******* Training  *******
+tn = 6556, fp = 5241, fn = 521, tp = 11276
+y_pred: 0 = 7077 | 1 = 16517
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8480|aupr=0.8045|ppvn=0.7654
+
+3 ****Validation  Epoch-6/200: Loss = 0.026990
+******* Validation  *******
+tn = 1808, fp = 1141, fn = 8, tp = 313
+y_pred: 0 = 1816 | 1 = 1454
+y_true: 0 = 2949 | 1 = 321
+auc=0.8882|aupr=0.3638|ppvn=0.4112
+
+3 ****Test-1  Epoch-6/200: Loss = 0.041558
+******* Test-1  *******
+tn = 72, fp = 131, fn = 5, tp = 15
+y_pred: 0 = 77 | 1 = 146
+y_true: 0 = 203 | 1 = 20
+auc=0.7081|aupr=0.2630|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.36379385569201356 @ epoch 6
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch6_AUPR0p363794.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-7/200 | Loss = 0.0253
+******* Training  *******
+tn = 7146, fp = 4651, fn = 505, tp = 11292
+y_pred: 0 = 7651 | 1 = 15943
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8636|aupr=0.8190|ppvn=0.7811
+
+3 ****Validation  Epoch-7/200: Loss = 0.025533
+******* Validation  *******
+tn = 1958, fp = 991, fn = 7, tp = 314
+y_pred: 0 = 1965 | 1 = 1305
+y_true: 0 = 2949 | 1 = 321
+auc=0.8989|aupr=0.4156|ppvn=0.4268
+
+3 ****Test-1  Epoch-7/200: Loss = 0.036907
+******* Test-1  *******
+tn = 100, fp = 103, fn = 5, tp = 15
+y_pred: 0 = 105 | 1 = 118
+y_true: 0 = 203 | 1 = 20
+auc=0.7059|aupr=0.2538|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.41559886577035915 @ epoch 7
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch7_AUPR0p415599.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-8/200 | Loss = 0.0242
+******* Training  *******
+tn = 7433, fp = 4364, fn = 453, tp = 11344
+y_pred: 0 = 7886 | 1 = 15708
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8733|aupr=0.8267|ppvn=0.7935
+
+3 ****Validation  Epoch-8/200: Loss = 0.025277
+******* Validation  *******
+tn = 2001, fp = 948, fn = 11, tp = 310
+y_pred: 0 = 2012 | 1 = 1258
+y_true: 0 = 2949 | 1 = 321
+auc=0.9056|aupr=0.4231|ppvn=0.4673
+
+3 ****Test-1  Epoch-8/200: Loss = 0.038405
+******* Test-1  *******
+tn = 106, fp = 97, fn = 5, tp = 15
+y_pred: 0 = 111 | 1 = 112
+y_true: 0 = 203 | 1 = 20
+auc=0.7007|aupr=0.2500|ppvn=0.2000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.4230948364470982 @ epoch 8
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch8_AUPR0p423095.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-9/200 | Loss = 0.0234
+******* Training  *******
+tn = 7608, fp = 4189, fn = 417, tp = 11380
+y_pred: 0 = 8025 | 1 = 15569
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8792|aupr=0.8370|ppvn=0.7977
+
+3 ****Validation  Epoch-9/200: Loss = 0.022065
+******* Validation  *******
+tn = 2135, fp = 814, fn = 10, tp = 311
+y_pred: 0 = 2145 | 1 = 1125
+y_true: 0 = 2949 | 1 = 321
+auc=0.9055|aupr=0.4070|ppvn=0.4984
+
+3 ****Test-1  Epoch-9/200: Loss = 0.037656
+******* Test-1  *******
+tn = 99, fp = 104, fn = 5, tp = 15
+y_pred: 0 = 104 | 1 = 119
+y_true: 0 = 203 | 1 = 20
+auc=0.6988|aupr=0.2733|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-10/200 | Loss = 0.0225
+******* Training  *******
+tn = 7835, fp = 3962, fn = 393, tp = 11404
+y_pred: 0 = 8228 | 1 = 15366
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8887|aupr=0.8460|ppvn=0.8116
+
+3 ****Validation  Epoch-10/200: Loss = 0.024364
+******* Validation  *******
+tn = 2054, fp = 895, fn = 7, tp = 314
+y_pred: 0 = 2061 | 1 = 1209
+y_true: 0 = 2949 | 1 = 321
+auc=0.9169|aupr=0.4786|ppvn=0.4735
+
+3 ****Test-1  Epoch-10/200: Loss = 0.039708
+******* Test-1  *******
+tn = 100, fp = 103, fn = 5, tp = 15
+y_pred: 0 = 105 | 1 = 118
+y_true: 0 = 203 | 1 = 20
+auc=0.7121|aupr=0.2249|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.47859567133835823 @ epoch 10
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch10_AUPR0p478596.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-11/200 | Loss = 0.0215
+******* Training  *******
+tn = 8003, fp = 3794, fn = 345, tp = 11452
+y_pred: 0 = 8348 | 1 = 15246
+y_true: 0 = 11797 | 1 = 11797
+auc=0.8954|aupr=0.8543|ppvn=0.8165
+
+3 ****Validation  Epoch-11/200: Loss = 0.023338
+******* Validation  *******
+tn = 2094, fp = 855, fn = 5, tp = 316
+y_pred: 0 = 2099 | 1 = 1171
+y_true: 0 = 2949 | 1 = 321
+auc=0.9211|aupr=0.4699|ppvn=0.5234
+
+3 ****Test-1  Epoch-11/200: Loss = 0.038337
+******* Test-1  *******
+tn = 105, fp = 98, fn = 5, tp = 15
+y_pred: 0 = 110 | 1 = 113
+y_true: 0 = 203 | 1 = 20
+auc=0.7015|aupr=0.2671|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-12/200 | Loss = 0.0209
+******* Training  *******
+tn = 8123, fp = 3674, fn = 325, tp = 11472
+y_pred: 0 = 8448 | 1 = 15146
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9010|aupr=0.8608|ppvn=0.8225
+
+3 ****Validation  Epoch-12/200: Loss = 0.022825
+******* Validation  *******
+tn = 2136, fp = 813, fn = 6, tp = 315
+y_pred: 0 = 2142 | 1 = 1128
+y_true: 0 = 2949 | 1 = 321
+auc=0.9235|aupr=0.5311|ppvn=0.4984
+
+3 ****Test-1  Epoch-12/200: Loss = 0.038576
+******* Test-1  *******
+tn = 113, fp = 90, fn = 5, tp = 15
+y_pred: 0 = 118 | 1 = 105
+y_true: 0 = 203 | 1 = 20
+auc=0.7005|aupr=0.2175|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.35 @ epoch 12
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch12_PPVN0p350000.pkl
+[Best Model Updated] Val-AUPR primary: 0.5311156341427394 @ epoch 12
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch12_AUPR0p531116.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-13/200 | Loss = 0.0204
+******* Training  *******
+tn = 8231, fp = 3566, fn = 298, tp = 11499
+y_pred: 0 = 8529 | 1 = 15065
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9057|aupr=0.8657|ppvn=0.8310
+
+3 ****Validation  Epoch-13/200: Loss = 0.024138
+******* Validation  *******
+tn = 2098, fp = 851, fn = 3, tp = 318
+y_pred: 0 = 2101 | 1 = 1169
+y_true: 0 = 2949 | 1 = 321
+auc=0.9254|aupr=0.5378|ppvn=0.4704
+
+3 ****Test-1  Epoch-13/200: Loss = 0.041013
+******* Test-1  *******
+tn = 109, fp = 94, fn = 5, tp = 15
+y_pred: 0 = 114 | 1 = 109
+y_true: 0 = 203 | 1 = 20
+auc=0.7010|aupr=0.1984|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.5377759032594266 @ epoch 13
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch13_AUPR0p537776.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-14/200 | Loss = 0.0196
+******* Training  *******
+tn = 8449, fp = 3348, fn = 283, tp = 11514
+y_pred: 0 = 8732 | 1 = 14862
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9102|aupr=0.8716|ppvn=0.8372
+
+3 ****Validation  Epoch-14/200: Loss = 0.024974
+******* Validation  *******
+tn = 2099, fp = 850, fn = 4, tp = 317
+y_pred: 0 = 2103 | 1 = 1167
+y_true: 0 = 2949 | 1 = 321
+auc=0.9320|aupr=0.5429|ppvn=0.5109
+
+3 ****Test-1  Epoch-14/200: Loss = 0.043077
+******* Test-1  *******
+tn = 109, fp = 94, fn = 5, tp = 15
+y_pred: 0 = 114 | 1 = 109
+y_true: 0 = 203 | 1 = 20
+auc=0.6995|aupr=0.2072|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.542940380884528 @ epoch 14
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch14_AUPR0p542940.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-15/200 | Loss = 0.0192
+******* Training  *******
+tn = 8520, fp = 3277, fn = 267, tp = 11530
+y_pred: 0 = 8787 | 1 = 14807
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9148|aupr=0.8811|ppvn=0.8387
+
+3 ****Validation  Epoch-15/200: Loss = 0.020005
+******* Validation  *******
+tn = 2221, fp = 728, fn = 5, tp = 316
+y_pred: 0 = 2226 | 1 = 1044
+y_true: 0 = 2949 | 1 = 321
+auc=0.9296|aupr=0.4971|ppvn=0.5016
+
+3 ****Test-1  Epoch-15/200: Loss = 0.040297
+******* Test-1  *******
+tn = 113, fp = 90, fn = 5, tp = 15
+y_pred: 0 = 118 | 1 = 105
+y_true: 0 = 203 | 1 = 20
+auc=0.6941|aupr=0.1937|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-16/200 | Loss = 0.0186
+******* Training  *******
+tn = 8635, fp = 3162, fn = 237, tp = 11560
+y_pred: 0 = 8872 | 1 = 14722
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9194|aupr=0.8860|ppvn=0.8484
+
+3 ****Validation  Epoch-16/200: Loss = 0.019229
+******* Validation  *******
+tn = 2216, fp = 733, fn = 4, tp = 317
+y_pred: 0 = 2220 | 1 = 1050
+y_true: 0 = 2949 | 1 = 321
+auc=0.9374|aupr=0.5738|ppvn=0.5265
+
+3 ****Test-1  Epoch-16/200: Loss = 0.035921
+******* Test-1  *******
+tn = 118, fp = 85, fn = 5, tp = 15
+y_pred: 0 = 123 | 1 = 100
+y_true: 0 = 203 | 1 = 20
+auc=0.7044|aupr=0.2349|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.5738368175082008 @ epoch 16
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch16_AUPR0p573837.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-17/200 | Loss = 0.0182
+******* Training  *******
+tn = 8711, fp = 3086, fn = 253, tp = 11544
+y_pred: 0 = 8964 | 1 = 14630
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9236|aupr=0.8932|ppvn=0.8498
+
+3 ****Validation  Epoch-17/200: Loss = 0.021267
+******* Validation  *******
+tn = 2203, fp = 746, fn = 6, tp = 315
+y_pred: 0 = 2209 | 1 = 1061
+y_true: 0 = 2949 | 1 = 321
+auc=0.9392|aupr=0.5811|ppvn=0.5452
+
+3 ****Test-1  Epoch-17/200: Loss = 0.036577
+******* Test-1  *******
+tn = 116, fp = 87, fn = 7, tp = 13
+y_pred: 0 = 123 | 1 = 100
+y_true: 0 = 203 | 1 = 20
+auc=0.7074|aupr=0.2485|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.5811171148954869 @ epoch 17
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch17_AUPR0p581117.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-18/200 | Loss = 0.0178
+******* Training  *******
+tn = 8805, fp = 2992, fn = 235, tp = 11562
+y_pred: 0 = 9040 | 1 = 14554
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9265|aupr=0.8976|ppvn=0.8546
+
+3 ****Validation  Epoch-18/200: Loss = 0.020567
+******* Validation  *******
+tn = 2252, fp = 697, fn = 4, tp = 317
+y_pred: 0 = 2256 | 1 = 1014
+y_true: 0 = 2949 | 1 = 321
+auc=0.9383|aupr=0.5908|ppvn=0.5483
+
+3 ****Test-1  Epoch-18/200: Loss = 0.037200
+******* Test-1  *******
+tn = 117, fp = 86, fn = 6, tp = 14
+y_pred: 0 = 123 | 1 = 100
+y_true: 0 = 203 | 1 = 20
+auc=0.7079|aupr=0.2112|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.5908299700985926 @ epoch 18
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch18_AUPR0p590830.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-19/200 | Loss = 0.0177
+******* Training  *******
+tn = 8841, fp = 2956, fn = 252, tp = 11545
+y_pred: 0 = 9093 | 1 = 14501
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9275|aupr=0.8978|ppvn=0.8539
+
+3 ****Validation  Epoch-19/200: Loss = 0.017927
+******* Validation  *******
+tn = 2253, fp = 696, fn = 5, tp = 316
+y_pred: 0 = 2258 | 1 = 1012
+y_true: 0 = 2949 | 1 = 321
+auc=0.9389|aupr=0.5812|ppvn=0.5483
+
+3 ****Test-1  Epoch-19/200: Loss = 0.034405
+******* Test-1  *******
+tn = 117, fp = 86, fn = 4, tp = 16
+y_pred: 0 = 121 | 1 = 102
+y_true: 0 = 203 | 1 = 20
+auc=0.7288|aupr=0.2409|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-20/200 | Loss = 0.0171
+******* Training  *******
+tn = 8954, fp = 2843, fn = 221, tp = 11576
+y_pred: 0 = 9175 | 1 = 14419
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9329|aupr=0.9052|ppvn=0.8612
+
+3 ****Validation  Epoch-20/200: Loss = 0.018975
+******* Validation  *******
+tn = 2270, fp = 679, fn = 4, tp = 317
+y_pred: 0 = 2274 | 1 = 996
+y_true: 0 = 2949 | 1 = 321
+auc=0.9418|aupr=0.5926|ppvn=0.5483
+
+3 ****Test-1  Epoch-20/200: Loss = 0.037318
+******* Test-1  *******
+tn = 117, fp = 86, fn = 7, tp = 13
+y_pred: 0 = 124 | 1 = 99
+y_true: 0 = 203 | 1 = 20
+auc=0.7315|aupr=0.2280|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.5926394218783049 @ epoch 20
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch20_AUPR0p592639.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-21/200 | Loss = 0.0170
+******* Training  *******
+tn = 8980, fp = 2817, fn = 218, tp = 11579
+y_pred: 0 = 9198 | 1 = 14396
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9317|aupr=0.9038|ppvn=0.8595
+
+3 ****Validation  Epoch-21/200: Loss = 0.020943
+******* Validation  *******
+tn = 2272, fp = 677, fn = 3, tp = 318
+y_pred: 0 = 2275 | 1 = 995
+y_true: 0 = 2949 | 1 = 321
+auc=0.9414|aupr=0.6042|ppvn=0.5701
+
+3 ****Test-1  Epoch-21/200: Loss = 0.037825
+******* Test-1  *******
+tn = 111, fp = 92, fn = 6, tp = 14
+y_pred: 0 = 117 | 1 = 106
+y_true: 0 = 203 | 1 = 20
+auc=0.7305|aupr=0.2231|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6041640070540157 @ epoch 21
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch21_AUPR0p604164.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-22/200 | Loss = 0.0166
+******* Training  *******
+tn = 9015, fp = 2782, fn = 196, tp = 11601
+y_pred: 0 = 9211 | 1 = 14383
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9346|aupr=0.9086|ppvn=0.8657
+
+3 ****Validation  Epoch-22/200: Loss = 0.017611
+******* Validation  *******
+tn = 2312, fp = 637, fn = 6, tp = 315
+y_pred: 0 = 2318 | 1 = 952
+y_true: 0 = 2949 | 1 = 321
+auc=0.9458|aupr=0.6155|ppvn=0.5701
+
+3 ****Test-1  Epoch-22/200: Loss = 0.034481
+******* Test-1  *******
+tn = 124, fp = 79, fn = 6, tp = 14
+y_pred: 0 = 130 | 1 = 93
+y_true: 0 = 203 | 1 = 20
+auc=0.7421|aupr=0.2258|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6155241912687258 @ epoch 22
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch22_AUPR0p615524.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-23/200 | Loss = 0.0164
+******* Training  *******
+tn = 9069, fp = 2728, fn = 247, tp = 11550
+y_pred: 0 = 9316 | 1 = 14278
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9363|aupr=0.9122|ppvn=0.8687
+
+3 ****Validation  Epoch-23/200: Loss = 0.020016
+******* Validation  *******
+tn = 2284, fp = 665, fn = 3, tp = 318
+y_pred: 0 = 2287 | 1 = 983
+y_true: 0 = 2949 | 1 = 321
+auc=0.9423|aupr=0.5760|ppvn=0.5327
+
+3 ****Test-1  Epoch-23/200: Loss = 0.039203
+******* Test-1  *******
+tn = 111, fp = 92, fn = 6, tp = 14
+y_pred: 0 = 117 | 1 = 106
+y_true: 0 = 203 | 1 = 20
+auc=0.7323|aupr=0.2163|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-24/200 | Loss = 0.0160
+******* Training  *******
+tn = 9167, fp = 2630, fn = 192, tp = 11605
+y_pred: 0 = 9359 | 1 = 14235
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9375|aupr=0.9122|ppvn=0.8694
+
+3 ****Validation  Epoch-24/200: Loss = 0.017039
+******* Validation  *******
+tn = 2319, fp = 630, fn = 4, tp = 317
+y_pred: 0 = 2323 | 1 = 947
+y_true: 0 = 2949 | 1 = 321
+auc=0.9447|aupr=0.5942|ppvn=0.5358
+
+3 ****Test-1  Epoch-24/200: Loss = 0.033822
+******* Test-1  *******
+tn = 121, fp = 82, fn = 6, tp = 14
+y_pred: 0 = 127 | 1 = 96
+y_true: 0 = 203 | 1 = 20
+auc=0.7345|aupr=0.2393|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-25/200 | Loss = 0.0158
+******* Training  *******
+tn = 9202, fp = 2595, fn = 176, tp = 11621
+y_pred: 0 = 9378 | 1 = 14216
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9409|aupr=0.9181|ppvn=0.8734
+
+3 ****Validation  Epoch-25/200: Loss = 0.020848
+******* Validation  *******
+tn = 2280, fp = 669, fn = 6, tp = 315
+y_pred: 0 = 2286 | 1 = 984
+y_true: 0 = 2949 | 1 = 321
+auc=0.9406|aupr=0.5686|ppvn=0.5421
+
+3 ****Test-1  Epoch-25/200: Loss = 0.038656
+******* Test-1  *******
+tn = 118, fp = 85, fn = 7, tp = 13
+y_pred: 0 = 125 | 1 = 98
+y_true: 0 = 203 | 1 = 20
+auc=0.7406|aupr=0.2471|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-26/200 | Loss = 0.0160
+******* Training  *******
+tn = 9171, fp = 2626, fn = 194, tp = 11603
+y_pred: 0 = 9365 | 1 = 14229
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9383|aupr=0.9126|ppvn=0.8717
+
+3 ****Validation  Epoch-26/200: Loss = 0.018880
+******* Validation  *******
+tn = 2285, fp = 664, fn = 4, tp = 317
+y_pred: 0 = 2289 | 1 = 981
+y_true: 0 = 2949 | 1 = 321
+auc=0.9463|aupr=0.5968|ppvn=0.5639
+
+3 ****Test-1  Epoch-26/200: Loss = 0.035060
+******* Test-1  *******
+tn = 120, fp = 83, fn = 4, tp = 16
+y_pred: 0 = 124 | 1 = 99
+y_true: 0 = 203 | 1 = 20
+auc=0.7443|aupr=0.2271|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-27/200 | Loss = 0.0157
+******* Training  *******
+tn = 9245, fp = 2552, fn = 187, tp = 11610
+y_pred: 0 = 9432 | 1 = 14162
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9398|aupr=0.9154|ppvn=0.8717
+
+3 ****Validation  Epoch-27/200: Loss = 0.017747
+******* Validation  *******
+tn = 2322, fp = 627, fn = 5, tp = 316
+y_pred: 0 = 2327 | 1 = 943
+y_true: 0 = 2949 | 1 = 321
+auc=0.9451|aupr=0.5941|ppvn=0.5763
+
+3 ****Test-1  Epoch-27/200: Loss = 0.037918
+******* Test-1  *******
+tn = 124, fp = 79, fn = 7, tp = 13
+y_pred: 0 = 131 | 1 = 92
+y_true: 0 = 203 | 1 = 20
+auc=0.7399|aupr=0.2307|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-28/200 | Loss = 0.0153
+******* Training  *******
+tn = 9273, fp = 2524, fn = 180, tp = 11617
+y_pred: 0 = 9453 | 1 = 14141
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9432|aupr=0.9222|ppvn=0.8761
+
+3 ****Validation  Epoch-28/200: Loss = 0.020846
+******* Validation  *******
+tn = 2291, fp = 658, fn = 4, tp = 317
+y_pred: 0 = 2295 | 1 = 975
+y_true: 0 = 2949 | 1 = 321
+auc=0.9441|aupr=0.5550|ppvn=0.5607
+
+3 ****Test-1  Epoch-28/200: Loss = 0.040114
+******* Test-1  *******
+tn = 116, fp = 87, fn = 6, tp = 14
+y_pred: 0 = 122 | 1 = 101
+y_true: 0 = 203 | 1 = 20
+auc=0.7554|aupr=0.2492|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-29/200 | Loss = 0.0155
+******* Training  *******
+tn = 9282, fp = 2515, fn = 182, tp = 11615
+y_pred: 0 = 9464 | 1 = 14130
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9417|aupr=0.9176|ppvn=0.8771
+
+3 ****Validation  Epoch-29/200: Loss = 0.017467
+******* Validation  *******
+tn = 2332, fp = 617, fn = 5, tp = 316
+y_pred: 0 = 2337 | 1 = 933
+y_true: 0 = 2949 | 1 = 321
+auc=0.9452|aupr=0.5888|ppvn=0.5701
+
+3 ****Test-1  Epoch-29/200: Loss = 0.034237
+******* Test-1  *******
+tn = 133, fp = 70, fn = 7, tp = 13
+y_pred: 0 = 140 | 1 = 83
+y_true: 0 = 203 | 1 = 20
+auc=0.7631|aupr=0.2434|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.4 @ epoch 29
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch29_PPVN0p400000.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-30/200 | Loss = 0.0152
+******* Training  *******
+tn = 9335, fp = 2462, fn = 164, tp = 11633
+y_pred: 0 = 9499 | 1 = 14095
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9439|aupr=0.9216|ppvn=0.8786
+
+3 ****Validation  Epoch-30/200: Loss = 0.015518
+******* Validation  *******
+tn = 2389, fp = 560, fn = 6, tp = 315
+y_pred: 0 = 2395 | 1 = 875
+y_true: 0 = 2949 | 1 = 321
+auc=0.9474|aupr=0.6156|ppvn=0.5794
+
+3 ****Test-1  Epoch-30/200: Loss = 0.035471
+******* Test-1  *******
+tn = 136, fp = 67, fn = 7, tp = 13
+y_pred: 0 = 143 | 1 = 80
+y_true: 0 = 203 | 1 = 20
+auc=0.7424|aupr=0.2340|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6156481933249995 @ epoch 30
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch30_AUPR0p615648.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-31/200 | Loss = 0.0150
+******* Training  *******
+tn = 9327, fp = 2470, fn = 168, tp = 11629
+y_pred: 0 = 9495 | 1 = 14099
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9440|aupr=0.9200|ppvn=0.8777
+
+3 ****Validation  Epoch-31/200: Loss = 0.019435
+******* Validation  *******
+tn = 2336, fp = 613, fn = 5, tp = 316
+y_pred: 0 = 2341 | 1 = 929
+y_true: 0 = 2949 | 1 = 321
+auc=0.9470|aupr=0.6184|ppvn=0.6075
+
+3 ****Test-1  Epoch-31/200: Loss = 0.036323
+******* Test-1  *******
+tn = 134, fp = 69, fn = 7, tp = 13
+y_pred: 0 = 141 | 1 = 82
+y_true: 0 = 203 | 1 = 20
+auc=0.7567|aupr=0.2719|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.618425575899533 @ epoch 31
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch31_AUPR0p618426.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-32/200 | Loss = 0.0149
+******* Training  *******
+tn = 9379, fp = 2418, fn = 165, tp = 11632
+y_pred: 0 = 9544 | 1 = 14050
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9449|aupr=0.9228|ppvn=0.8788
+
+3 ****Validation  Epoch-32/200: Loss = 0.017370
+******* Validation  *******
+tn = 2356, fp = 593, fn = 6, tp = 315
+y_pred: 0 = 2362 | 1 = 908
+y_true: 0 = 2949 | 1 = 321
+auc=0.9478|aupr=0.5879|ppvn=0.5701
+
+3 ****Test-1  Epoch-32/200: Loss = 0.035036
+******* Test-1  *******
+tn = 136, fp = 67, fn = 7, tp = 13
+y_pred: 0 = 143 | 1 = 80
+y_true: 0 = 203 | 1 = 20
+auc=0.7557|aupr=0.2398|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-33/200 | Loss = 0.0149
+******* Training  *******
+tn = 9391, fp = 2406, fn = 176, tp = 11621
+y_pred: 0 = 9567 | 1 = 14027
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9467|aupr=0.9254|ppvn=0.8824
+
+3 ****Validation  Epoch-33/200: Loss = 0.019971
+******* Validation  *******
+tn = 2298, fp = 651, fn = 4, tp = 317
+y_pred: 0 = 2302 | 1 = 968
+y_true: 0 = 2949 | 1 = 321
+auc=0.9466|aupr=0.5750|ppvn=0.5514
+
+3 ****Test-1  Epoch-33/200: Loss = 0.037005
+******* Test-1  *******
+tn = 125, fp = 78, fn = 7, tp = 13
+y_pred: 0 = 132 | 1 = 91
+y_true: 0 = 203 | 1 = 20
+auc=0.7663|aupr=0.2561|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-34/200 | Loss = 0.0146
+******* Training  *******
+tn = 9406, fp = 2391, fn = 149, tp = 11648
+y_pred: 0 = 9555 | 1 = 14039
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9474|aupr=0.9267|ppvn=0.8834
+
+3 ****Validation  Epoch-34/200: Loss = 0.018222
+******* Validation  *******
+tn = 2349, fp = 600, fn = 4, tp = 317
+y_pred: 0 = 2353 | 1 = 917
+y_true: 0 = 2949 | 1 = 321
+auc=0.9490|aupr=0.5777|ppvn=0.5732
+
+3 ****Test-1  Epoch-34/200: Loss = 0.033689
+******* Test-1  *******
+tn = 136, fp = 67, fn = 6, tp = 14
+y_pred: 0 = 142 | 1 = 81
+y_true: 0 = 203 | 1 = 20
+auc=0.7810|aupr=0.2642|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-35/200 | Loss = 0.0145
+******* Training  *******
+tn = 9441, fp = 2356, fn = 161, tp = 11636
+y_pred: 0 = 9602 | 1 = 13992
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9484|aupr=0.9283|ppvn=0.8848
+
+3 ****Validation  Epoch-35/200: Loss = 0.018693
+******* Validation  *******
+tn = 2343, fp = 606, fn = 4, tp = 317
+y_pred: 0 = 2347 | 1 = 923
+y_true: 0 = 2949 | 1 = 321
+auc=0.9507|aupr=0.6028|ppvn=0.5701
+
+3 ****Test-1  Epoch-35/200: Loss = 0.035230
+******* Test-1  *******
+tn = 135, fp = 68, fn = 6, tp = 14
+y_pred: 0 = 141 | 1 = 82
+y_true: 0 = 203 | 1 = 20
+auc=0.7788|aupr=0.2619|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-36/200 | Loss = 0.0144
+******* Training  *******
+tn = 9457, fp = 2340, fn = 163, tp = 11634
+y_pred: 0 = 9620 | 1 = 13974
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9478|aupr=0.9262|ppvn=0.8854
+
+3 ****Validation  Epoch-36/200: Loss = 0.015766
+******* Validation  *******
+tn = 2394, fp = 555, fn = 7, tp = 314
+y_pred: 0 = 2401 | 1 = 869
+y_true: 0 = 2949 | 1 = 321
+auc=0.9501|aupr=0.6076|ppvn=0.5701
+
+3 ****Test-1  Epoch-36/200: Loss = 0.031520
+******* Test-1  *******
+tn = 149, fp = 54, fn = 7, tp = 13
+y_pred: 0 = 156 | 1 = 67
+y_true: 0 = 203 | 1 = 20
+auc=0.7781|aupr=0.2648|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-37/200 | Loss = 0.0143
+******* Training  *******
+tn = 9451, fp = 2346, fn = 150, tp = 11647
+y_pred: 0 = 9601 | 1 = 13993
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9492|aupr=0.9282|ppvn=0.8856
+
+3 ****Validation  Epoch-37/200: Loss = 0.017101
+******* Validation  *******
+tn = 2379, fp = 570, fn = 6, tp = 315
+y_pred: 0 = 2385 | 1 = 885
+y_true: 0 = 2949 | 1 = 321
+auc=0.9507|aupr=0.6065|ppvn=0.5950
+
+3 ****Test-1  Epoch-37/200: Loss = 0.037596
+******* Test-1  *******
+tn = 135, fp = 68, fn = 6, tp = 14
+y_pred: 0 = 141 | 1 = 82
+y_true: 0 = 203 | 1 = 20
+auc=0.7650|aupr=0.2404|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-38/200 | Loss = 0.0141
+******* Training  *******
+tn = 9494, fp = 2303, fn = 157, tp = 11640
+y_pred: 0 = 9651 | 1 = 13943
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9498|aupr=0.9308|ppvn=0.8862
+
+3 ****Validation  Epoch-38/200: Loss = 0.017031
+******* Validation  *******
+tn = 2374, fp = 575, fn = 5, tp = 316
+y_pred: 0 = 2379 | 1 = 891
+y_true: 0 = 2949 | 1 = 321
+auc=0.9517|aupr=0.5993|ppvn=0.5888
+
+3 ****Test-1  Epoch-38/200: Loss = 0.034589
+******* Test-1  *******
+tn = 149, fp = 54, fn = 7, tp = 13
+y_pred: 0 = 156 | 1 = 67
+y_true: 0 = 203 | 1 = 20
+auc=0.7729|aupr=0.2601|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-39/200 | Loss = 0.0141
+******* Training  *******
+tn = 9483, fp = 2314, fn = 160, tp = 11637
+y_pred: 0 = 9643 | 1 = 13951
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9494|aupr=0.9299|ppvn=0.8878
+
+3 ****Validation  Epoch-39/200: Loss = 0.017056
+******* Validation  *******
+tn = 2375, fp = 574, fn = 5, tp = 316
+y_pred: 0 = 2380 | 1 = 890
+y_true: 0 = 2949 | 1 = 321
+auc=0.9493|aupr=0.5995|ppvn=0.5888
+
+3 ****Test-1  Epoch-39/200: Loss = 0.032468
+******* Test-1  *******
+tn = 143, fp = 60, fn = 6, tp = 14
+y_pred: 0 = 149 | 1 = 74
+y_true: 0 = 203 | 1 = 20
+auc=0.7830|aupr=0.2452|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-40/200 | Loss = 0.0138
+******* Training  *******
+tn = 9555, fp = 2242, fn = 130, tp = 11667
+y_pred: 0 = 9685 | 1 = 13909
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9524|aupr=0.9327|ppvn=0.8901
+
+3 ****Validation  Epoch-40/200: Loss = 0.016098
+******* Validation  *******
+tn = 2403, fp = 546, fn = 6, tp = 315
+y_pred: 0 = 2409 | 1 = 861
+y_true: 0 = 2949 | 1 = 321
+auc=0.9515|aupr=0.6059|ppvn=0.5826
+
+3 ****Test-1  Epoch-40/200: Loss = 0.034993
+******* Test-1  *******
+tn = 148, fp = 55, fn = 7, tp = 13
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.7695|aupr=0.2487|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-41/200 | Loss = 0.0140
+******* Training  *******
+tn = 9552, fp = 2245, fn = 141, tp = 11656
+y_pred: 0 = 9693 | 1 = 13901
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9507|aupr=0.9312|ppvn=0.8883
+
+3 ****Validation  Epoch-41/200: Loss = 0.017671
+******* Validation  *******
+tn = 2357, fp = 592, fn = 5, tp = 316
+y_pred: 0 = 2362 | 1 = 908
+y_true: 0 = 2949 | 1 = 321
+auc=0.9499|aupr=0.6000|ppvn=0.5607
+
+3 ****Test-1  Epoch-41/200: Loss = 0.034332
+******* Test-1  *******
+tn = 136, fp = 67, fn = 5, tp = 15
+y_pred: 0 = 141 | 1 = 82
+y_true: 0 = 203 | 1 = 20
+auc=0.7943|aupr=0.2624|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-42/200 | Loss = 0.0139
+******* Training  *******
+tn = 9550, fp = 2247, fn = 133, tp = 11664
+y_pred: 0 = 9683 | 1 = 13911
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9517|aupr=0.9336|ppvn=0.8890
+
+3 ****Validation  Epoch-42/200: Loss = 0.015607
+******* Validation  *******
+tn = 2405, fp = 544, fn = 5, tp = 316
+y_pred: 0 = 2410 | 1 = 860
+y_true: 0 = 2949 | 1 = 321
+auc=0.9503|aupr=0.6075|ppvn=0.5857
+
+3 ****Test-1  Epoch-42/200: Loss = 0.028499
+******* Test-1  *******
+tn = 151, fp = 52, fn = 7, tp = 13
+y_pred: 0 = 158 | 1 = 65
+y_true: 0 = 203 | 1 = 20
+auc=0.7845|aupr=0.2672|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-43/200 | Loss = 0.0138
+******* Training  *******
+tn = 9606, fp = 2191, fn = 139, tp = 11658
+y_pred: 0 = 9745 | 1 = 13849
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9523|aupr=0.9335|ppvn=0.8903
+
+3 ****Validation  Epoch-43/200: Loss = 0.016957
+******* Validation  *******
+tn = 2409, fp = 540, fn = 7, tp = 314
+y_pred: 0 = 2416 | 1 = 854
+y_true: 0 = 2949 | 1 = 321
+auc=0.9489|aupr=0.6009|ppvn=0.5607
+
+3 ****Test-1  Epoch-43/200: Loss = 0.031822
+******* Test-1  *******
+tn = 149, fp = 54, fn = 7, tp = 13
+y_pred: 0 = 156 | 1 = 67
+y_true: 0 = 203 | 1 = 20
+auc=0.7712|aupr=0.2680|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-44/200 | Loss = 0.0137
+******* Training  *******
+tn = 9624, fp = 2173, fn = 141, tp = 11656
+y_pred: 0 = 9765 | 1 = 13829
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9524|aupr=0.9344|ppvn=0.8901
+
+3 ****Validation  Epoch-44/200: Loss = 0.017076
+******* Validation  *******
+tn = 2407, fp = 542, fn = 6, tp = 315
+y_pred: 0 = 2413 | 1 = 857
+y_true: 0 = 2949 | 1 = 321
+auc=0.9502|aupr=0.6221|ppvn=0.6012
+
+3 ****Test-1  Epoch-44/200: Loss = 0.036578
+******* Test-1  *******
+tn = 138, fp = 65, fn = 7, tp = 13
+y_pred: 0 = 145 | 1 = 78
+y_true: 0 = 203 | 1 = 20
+auc=0.7685|aupr=0.2632|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6221365379601345 @ epoch 44
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch44_AUPR0p622137.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-45/200 | Loss = 0.0135
+******* Training  *******
+tn = 9631, fp = 2166, fn = 133, tp = 11664
+y_pred: 0 = 9764 | 1 = 13830
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9529|aupr=0.9352|ppvn=0.8899
+
+3 ****Validation  Epoch-45/200: Loss = 0.016335
+******* Validation  *******
+tn = 2396, fp = 553, fn = 4, tp = 317
+y_pred: 0 = 2400 | 1 = 870
+y_true: 0 = 2949 | 1 = 321
+auc=0.9530|aupr=0.6093|ppvn=0.6106
+
+3 ****Test-1  Epoch-45/200: Loss = 0.034736
+******* Test-1  *******
+tn = 141, fp = 62, fn = 6, tp = 14
+y_pred: 0 = 147 | 1 = 76
+y_true: 0 = 203 | 1 = 20
+auc=0.7786|aupr=0.2580|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-46/200 | Loss = 0.0135
+******* Training  *******
+tn = 9640, fp = 2157, fn = 138, tp = 11659
+y_pred: 0 = 9778 | 1 = 13816
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9544|aupr=0.9381|ppvn=0.8918
+
+3 ****Validation  Epoch-46/200: Loss = 0.016866
+******* Validation  *******
+tn = 2380, fp = 569, fn = 5, tp = 316
+y_pred: 0 = 2385 | 1 = 885
+y_true: 0 = 2949 | 1 = 321
+auc=0.9513|aupr=0.5986|ppvn=0.5670
+
+3 ****Test-1  Epoch-46/200: Loss = 0.032964
+******* Test-1  *******
+tn = 138, fp = 65, fn = 6, tp = 14
+y_pred: 0 = 144 | 1 = 79
+y_true: 0 = 203 | 1 = 20
+auc=0.7746|aupr=0.2458|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-47/200 | Loss = 0.0134
+******* Training  *******
+tn = 9653, fp = 2144, fn = 140, tp = 11657
+y_pred: 0 = 9793 | 1 = 13801
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9552|aupr=0.9382|ppvn=0.8949
+
+3 ****Validation  Epoch-47/200: Loss = 0.015216
+******* Validation  *******
+tn = 2419, fp = 530, fn = 8, tp = 313
+y_pred: 0 = 2427 | 1 = 843
+y_true: 0 = 2949 | 1 = 321
+auc=0.9540|aupr=0.6174|ppvn=0.6044
+
+3 ****Test-1  Epoch-47/200: Loss = 0.033932
+******* Test-1  *******
+tn = 147, fp = 56, fn = 7, tp = 13
+y_pred: 0 = 154 | 1 = 69
+y_true: 0 = 203 | 1 = 20
+auc=0.7879|aupr=0.2845|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-48/200 | Loss = 0.0133
+******* Training  *******
+tn = 9664, fp = 2133, fn = 149, tp = 11648
+y_pred: 0 = 9813 | 1 = 13781
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9549|aupr=0.9358|ppvn=0.8943
+
+3 ****Validation  Epoch-48/200: Loss = 0.018992
+******* Validation  *******
+tn = 2345, fp = 604, fn = 6, tp = 315
+y_pred: 0 = 2351 | 1 = 919
+y_true: 0 = 2949 | 1 = 321
+auc=0.9505|aupr=0.6124|ppvn=0.5794
+
+3 ****Test-1  Epoch-48/200: Loss = 0.036825
+******* Test-1  *******
+tn = 140, fp = 63, fn = 7, tp = 13
+y_pred: 0 = 147 | 1 = 76
+y_true: 0 = 203 | 1 = 20
+auc=0.7808|aupr=0.2438|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-49/200 | Loss = 0.0132
+******* Training  *******
+tn = 9620, fp = 2177, fn = 110, tp = 11687
+y_pred: 0 = 9730 | 1 = 13864
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9565|aupr=0.9391|ppvn=0.8936
+
+3 ****Validation  Epoch-49/200: Loss = 0.015671
+******* Validation  *******
+tn = 2429, fp = 520, fn = 6, tp = 315
+y_pred: 0 = 2435 | 1 = 835
+y_true: 0 = 2949 | 1 = 321
+auc=0.9537|aupr=0.6288|ppvn=0.6012
+
+3 ****Test-1  Epoch-49/200: Loss = 0.028335
+******* Test-1  *******
+tn = 153, fp = 50, fn = 7, tp = 13
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.8007|aupr=0.2624|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6288425459660684 @ epoch 49
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch49_AUPR0p628843.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-50/200 | Loss = 0.0133
+******* Training  *******
+tn = 9689, fp = 2108, fn = 137, tp = 11660
+y_pred: 0 = 9826 | 1 = 13768
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9562|aupr=0.9395|ppvn=0.8946
+
+3 ****Validation  Epoch-50/200: Loss = 0.017473
+******* Validation  *******
+tn = 2390, fp = 559, fn = 7, tp = 314
+y_pred: 0 = 2397 | 1 = 873
+y_true: 0 = 2949 | 1 = 321
+auc=0.9525|aupr=0.6094|ppvn=0.5794
+
+3 ****Test-1  Epoch-50/200: Loss = 0.032957
+******* Test-1  *******
+tn = 145, fp = 58, fn = 6, tp = 14
+y_pred: 0 = 151 | 1 = 72
+y_true: 0 = 203 | 1 = 20
+auc=0.8064|aupr=0.2765|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-51/200 | Loss = 0.0132
+******* Training  *******
+tn = 9699, fp = 2098, fn = 116, tp = 11681
+y_pred: 0 = 9815 | 1 = 13779
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9558|aupr=0.9378|ppvn=0.8957
+
+3 ****Validation  Epoch-51/200: Loss = 0.016058
+******* Validation  *******
+tn = 2407, fp = 542, fn = 5, tp = 316
+y_pred: 0 = 2412 | 1 = 858
+y_true: 0 = 2949 | 1 = 321
+auc=0.9520|aupr=0.6030|ppvn=0.5857
+
+3 ****Test-1  Epoch-51/200: Loss = 0.032792
+******* Test-1  *******
+tn = 139, fp = 64, fn = 6, tp = 14
+y_pred: 0 = 145 | 1 = 78
+y_true: 0 = 203 | 1 = 20
+auc=0.7865|aupr=0.2537|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-52/200 | Loss = 0.0130
+******* Training  *******
+tn = 9694, fp = 2103, fn = 103, tp = 11694
+y_pred: 0 = 9797 | 1 = 13797
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9574|aupr=0.9416|ppvn=0.8969
+
+3 ****Validation  Epoch-52/200: Loss = 0.016935
+******* Validation  *******
+tn = 2407, fp = 542, fn = 5, tp = 316
+y_pred: 0 = 2412 | 1 = 858
+y_true: 0 = 2949 | 1 = 321
+auc=0.9514|aupr=0.5836|ppvn=0.5826
+
+3 ****Test-1  Epoch-52/200: Loss = 0.032711
+******* Test-1  *******
+tn = 138, fp = 65, fn = 4, tp = 16
+y_pred: 0 = 142 | 1 = 81
+y_true: 0 = 203 | 1 = 20
+auc=0.8165|aupr=0.2774|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-53/200 | Loss = 0.0129
+******* Training  *******
+tn = 9756, fp = 2041, fn = 121, tp = 11676
+y_pred: 0 = 9877 | 1 = 13717
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9575|aupr=0.9405|ppvn=0.8965
+
+3 ****Validation  Epoch-53/200: Loss = 0.017101
+******* Validation  *******
+tn = 2392, fp = 557, fn = 6, tp = 315
+y_pred: 0 = 2398 | 1 = 872
+y_true: 0 = 2949 | 1 = 321
+auc=0.9504|aupr=0.5880|ppvn=0.5857
+
+3 ****Test-1  Epoch-53/200: Loss = 0.038224
+******* Test-1  *******
+tn = 147, fp = 56, fn = 4, tp = 16
+y_pred: 0 = 151 | 1 = 72
+y_true: 0 = 203 | 1 = 20
+auc=0.7815|aupr=0.2487|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-54/200 | Loss = 0.0129
+******* Training  *******
+tn = 9725, fp = 2072, fn = 120, tp = 11677
+y_pred: 0 = 9845 | 1 = 13749
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9572|aupr=0.9414|ppvn=0.8951
+
+3 ****Validation  Epoch-54/200: Loss = 0.016141
+******* Validation  *******
+tn = 2413, fp = 536, fn = 6, tp = 315
+y_pred: 0 = 2419 | 1 = 851
+y_true: 0 = 2949 | 1 = 321
+auc=0.9519|aupr=0.5850|ppvn=0.5888
+
+3 ****Test-1  Epoch-54/200: Loss = 0.029378
+******* Test-1  *******
+tn = 145, fp = 58, fn = 7, tp = 13
+y_pred: 0 = 152 | 1 = 71
+y_true: 0 = 203 | 1 = 20
+auc=0.8118|aupr=0.2536|ppvn=0.2000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-55/200 | Loss = 0.0130
+******* Training  *******
+tn = 9722, fp = 2075, fn = 121, tp = 11676
+y_pred: 0 = 9843 | 1 = 13751
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9571|aupr=0.9417|ppvn=0.8957
+
+3 ****Validation  Epoch-55/200: Loss = 0.018949
+******* Validation  *******
+tn = 2385, fp = 564, fn = 6, tp = 315
+y_pred: 0 = 2391 | 1 = 879
+y_true: 0 = 2949 | 1 = 321
+auc=0.9535|aupr=0.6047|ppvn=0.6137
+
+3 ****Test-1  Epoch-55/200: Loss = 0.041907
+******* Test-1  *******
+tn = 134, fp = 69, fn = 7, tp = 13
+y_pred: 0 = 141 | 1 = 82
+y_true: 0 = 203 | 1 = 20
+auc=0.7948|aupr=0.2649|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-56/200 | Loss = 0.0130
+******* Training  *******
+tn = 9692, fp = 2105, fn = 127, tp = 11670
+y_pred: 0 = 9819 | 1 = 13775
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9577|aupr=0.9419|ppvn=0.8984
+
+3 ****Validation  Epoch-56/200: Loss = 0.015061
+******* Validation  *******
+tn = 2448, fp = 501, fn = 6, tp = 315
+y_pred: 0 = 2454 | 1 = 816
+y_true: 0 = 2949 | 1 = 321
+auc=0.9573|aupr=0.6380|ppvn=0.6324
+
+3 ****Test-1  Epoch-56/200: Loss = 0.030442
+******* Test-1  *******
+tn = 150, fp = 53, fn = 7, tp = 13
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8064|aupr=0.2692|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6380145460766695 @ epoch 56
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch56_AUPR0p638015.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-57/200 | Loss = 0.0126
+******* Training  *******
+tn = 9796, fp = 2001, fn = 123, tp = 11674
+y_pred: 0 = 9919 | 1 = 13675
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9594|aupr=0.9438|ppvn=0.8998
+
+3 ****Validation  Epoch-57/200: Loss = 0.016846
+******* Validation  *******
+tn = 2395, fp = 554, fn = 5, tp = 316
+y_pred: 0 = 2400 | 1 = 870
+y_true: 0 = 2949 | 1 = 321
+auc=0.9545|aupr=0.5988|ppvn=0.6075
+
+3 ****Test-1  Epoch-57/200: Loss = 0.033644
+******* Test-1  *******
+tn = 134, fp = 69, fn = 4, tp = 16
+y_pred: 0 = 138 | 1 = 85
+y_true: 0 = 203 | 1 = 20
+auc=0.8099|aupr=0.2664|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-58/200 | Loss = 0.0129
+******* Training  *******
+tn = 9731, fp = 2066, fn = 117, tp = 11680
+y_pred: 0 = 9848 | 1 = 13746
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9585|aupr=0.9432|ppvn=0.8962
+
+3 ****Validation  Epoch-58/200: Loss = 0.019363
+******* Validation  *******
+tn = 2361, fp = 588, fn = 5, tp = 316
+y_pred: 0 = 2366 | 1 = 904
+y_true: 0 = 2949 | 1 = 321
+auc=0.9520|aupr=0.5959|ppvn=0.5950
+
+3 ****Test-1  Epoch-58/200: Loss = 0.036104
+******* Test-1  *******
+tn = 132, fp = 71, fn = 5, tp = 15
+y_pred: 0 = 137 | 1 = 86
+y_true: 0 = 203 | 1 = 20
+auc=0.8239|aupr=0.2887|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-59/200 | Loss = 0.0126
+******* Training  *******
+tn = 9787, fp = 2010, fn = 113, tp = 11684
+y_pred: 0 = 9900 | 1 = 13694
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9603|aupr=0.9460|ppvn=0.9009
+
+3 ****Validation  Epoch-59/200: Loss = 0.016408
+******* Validation  *******
+tn = 2414, fp = 535, fn = 5, tp = 316
+y_pred: 0 = 2419 | 1 = 851
+y_true: 0 = 2949 | 1 = 321
+auc=0.9513|aupr=0.5859|ppvn=0.5857
+
+3 ****Test-1  Epoch-59/200: Loss = 0.035723
+******* Test-1  *******
+tn = 140, fp = 63, fn = 6, tp = 14
+y_pred: 0 = 146 | 1 = 77
+y_true: 0 = 203 | 1 = 20
+auc=0.7810|aupr=0.2260|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-60/200 | Loss = 0.0125
+******* Training  *******
+tn = 9802, fp = 1995, fn = 125, tp = 11672
+y_pred: 0 = 9927 | 1 = 13667
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9606|aupr=0.9461|ppvn=0.9015
+
+3 ****Validation  Epoch-60/200: Loss = 0.017062
+******* Validation  *******
+tn = 2419, fp = 530, fn = 7, tp = 314
+y_pred: 0 = 2426 | 1 = 844
+y_true: 0 = 2949 | 1 = 321
+auc=0.9554|aupr=0.6269|ppvn=0.6012
+
+3 ****Test-1  Epoch-60/200: Loss = 0.031029
+******* Test-1  *******
+tn = 142, fp = 61, fn = 6, tp = 14
+y_pred: 0 = 148 | 1 = 75
+y_true: 0 = 203 | 1 = 20
+auc=0.8123|aupr=0.2683|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-61/200 | Loss = 0.0125
+******* Training  *******
+tn = 9819, fp = 1978, fn = 134, tp = 11663
+y_pred: 0 = 9953 | 1 = 13641
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9608|aupr=0.9471|ppvn=0.9020
+
+3 ****Validation  Epoch-61/200: Loss = 0.016326
+******* Validation  *******
+tn = 2411, fp = 538, fn = 6, tp = 315
+y_pred: 0 = 2417 | 1 = 853
+y_true: 0 = 2949 | 1 = 321
+auc=0.9547|aupr=0.6245|ppvn=0.6012
+
+3 ****Test-1  Epoch-61/200: Loss = 0.032999
+******* Test-1  *******
+tn = 144, fp = 59, fn = 6, tp = 14
+y_pred: 0 = 150 | 1 = 73
+y_true: 0 = 203 | 1 = 20
+auc=0.8126|aupr=0.2474|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-62/200 | Loss = 0.0126
+******* Training  *******
+tn = 9765, fp = 2032, fn = 114, tp = 11683
+y_pred: 0 = 9879 | 1 = 13715
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9592|aupr=0.9435|ppvn=0.8993
+
+3 ****Validation  Epoch-62/200: Loss = 0.014878
+******* Validation  *******
+tn = 2468, fp = 481, fn = 8, tp = 313
+y_pred: 0 = 2476 | 1 = 794
+y_true: 0 = 2949 | 1 = 321
+auc=0.9547|aupr=0.6151|ppvn=0.5981
+
+3 ****Test-1  Epoch-62/200: Loss = 0.031653
+******* Test-1  *******
+tn = 154, fp = 49, fn = 8, tp = 12
+y_pred: 0 = 162 | 1 = 61
+y_true: 0 = 203 | 1 = 20
+auc=0.7877|aupr=0.2363|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-63/200 | Loss = 0.0127
+******* Training  *******
+tn = 9798, fp = 1999, fn = 123, tp = 11674
+y_pred: 0 = 9921 | 1 = 13673
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9601|aupr=0.9451|ppvn=0.9009
+
+3 ****Validation  Epoch-63/200: Loss = 0.016235
+******* Validation  *******
+tn = 2449, fp = 500, fn = 5, tp = 316
+y_pred: 0 = 2454 | 1 = 816
+y_true: 0 = 2949 | 1 = 321
+auc=0.9521|aupr=0.6151|ppvn=0.5950
+
+3 ****Test-1  Epoch-63/200: Loss = 0.030926
+******* Test-1  *******
+tn = 151, fp = 52, fn = 6, tp = 14
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8032|aupr=0.2554|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-64/200 | Loss = 0.0124
+******* Training  *******
+tn = 9837, fp = 1960, fn = 122, tp = 11675
+y_pred: 0 = 9959 | 1 = 13635
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9609|aupr=0.9460|ppvn=0.9031
+
+3 ****Validation  Epoch-64/200: Loss = 0.014762
+******* Validation  *******
+tn = 2450, fp = 499, fn = 4, tp = 317
+y_pred: 0 = 2454 | 1 = 816
+y_true: 0 = 2949 | 1 = 321
+auc=0.9541|aupr=0.6065|ppvn=0.6012
+
+3 ****Test-1  Epoch-64/200: Loss = 0.029241
+******* Test-1  *******
+tn = 153, fp = 50, fn = 7, tp = 13
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.7958|aupr=0.2486|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-65/200 | Loss = 0.0123
+******* Training  *******
+tn = 9822, fp = 1975, fn = 106, tp = 11691
+y_pred: 0 = 9928 | 1 = 13666
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9615|aupr=0.9468|ppvn=0.9032
+
+3 ****Validation  Epoch-65/200: Loss = 0.014092
+******* Validation  *******
+tn = 2480, fp = 469, fn = 9, tp = 312
+y_pred: 0 = 2489 | 1 = 781
+y_true: 0 = 2949 | 1 = 321
+auc=0.9567|aupr=0.6256|ppvn=0.5888
+
+3 ****Test-1  Epoch-65/200: Loss = 0.031688
+******* Test-1  *******
+tn = 144, fp = 59, fn = 6, tp = 14
+y_pred: 0 = 150 | 1 = 73
+y_true: 0 = 203 | 1 = 20
+auc=0.8049|aupr=0.2553|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-66/200 | Loss = 0.0123
+******* Training  *******
+tn = 9839, fp = 1958, fn = 103, tp = 11694
+y_pred: 0 = 9942 | 1 = 13652
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9610|aupr=0.9459|ppvn=0.9031
+
+3 ****Validation  Epoch-66/200: Loss = 0.014291
+******* Validation  *******
+tn = 2496, fp = 453, fn = 11, tp = 310
+y_pred: 0 = 2507 | 1 = 763
+y_true: 0 = 2949 | 1 = 321
+auc=0.9564|aupr=0.6295|ppvn=0.6106
+
+3 ****Test-1  Epoch-66/200: Loss = 0.029430
+******* Test-1  *******
+tn = 158, fp = 45, fn = 7, tp = 13
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8185|aupr=0.2737|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-67/200 | Loss = 0.0120
+******* Training  *******
+tn = 9866, fp = 1931, fn = 97, tp = 11700
+y_pred: 0 = 9963 | 1 = 13631
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9629|aupr=0.9494|ppvn=0.9056
+
+3 ****Validation  Epoch-67/200: Loss = 0.014910
+******* Validation  *******
+tn = 2468, fp = 481, fn = 7, tp = 314
+y_pred: 0 = 2475 | 1 = 795
+y_true: 0 = 2949 | 1 = 321
+auc=0.9525|aupr=0.5910|ppvn=0.6012
+
+3 ****Test-1  Epoch-67/200: Loss = 0.032663
+******* Test-1  *******
+tn = 144, fp = 59, fn = 6, tp = 14
+y_pred: 0 = 150 | 1 = 73
+y_true: 0 = 203 | 1 = 20
+auc=0.8059|aupr=0.2535|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-68/200 | Loss = 0.0121
+******* Training  *******
+tn = 9892, fp = 1905, fn = 111, tp = 11686
+y_pred: 0 = 10003 | 1 = 13591
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9621|aupr=0.9478|ppvn=0.9015
+
+3 ****Validation  Epoch-68/200: Loss = 0.014494
+******* Validation  *******
+tn = 2465, fp = 484, fn = 7, tp = 314
+y_pred: 0 = 2472 | 1 = 798
+y_true: 0 = 2949 | 1 = 321
+auc=0.9550|aupr=0.6101|ppvn=0.6106
+
+3 ****Test-1  Epoch-68/200: Loss = 0.030040
+******* Test-1  *******
+tn = 150, fp = 53, fn = 7, tp = 13
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8143|aupr=0.2717|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-69/200 | Loss = 0.0120
+******* Training  *******
+tn = 9853, fp = 1944, fn = 101, tp = 11696
+y_pred: 0 = 9954 | 1 = 13640
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9634|aupr=0.9498|ppvn=0.9042
+
+3 ****Validation  Epoch-69/200: Loss = 0.015118
+******* Validation  *******
+tn = 2483, fp = 466, fn = 10, tp = 311
+y_pred: 0 = 2493 | 1 = 777
+y_true: 0 = 2949 | 1 = 321
+auc=0.9534|aupr=0.6183|ppvn=0.5888
+
+3 ****Test-1  Epoch-69/200: Loss = 0.031145
+******* Test-1  *******
+tn = 150, fp = 53, fn = 7, tp = 13
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8094|aupr=0.2815|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-70/200 | Loss = 0.0121
+******* Training  *******
+tn = 9876, fp = 1921, fn = 117, tp = 11680
+y_pred: 0 = 9993 | 1 = 13601
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9624|aupr=0.9482|ppvn=0.9050
+
+3 ****Validation  Epoch-70/200: Loss = 0.016254
+******* Validation  *******
+tn = 2466, fp = 483, fn = 9, tp = 312
+y_pred: 0 = 2475 | 1 = 795
+y_true: 0 = 2949 | 1 = 321
+auc=0.9563|aupr=0.6258|ppvn=0.6262
+
+3 ****Test-1  Epoch-70/200: Loss = 0.037705
+******* Test-1  *******
+tn = 147, fp = 56, fn = 5, tp = 15
+y_pred: 0 = 152 | 1 = 71
+y_true: 0 = 203 | 1 = 20
+auc=0.8064|aupr=0.2655|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-71/200 | Loss = 0.0120
+******* Training  *******
+tn = 9883, fp = 1914, fn = 116, tp = 11681
+y_pred: 0 = 9999 | 1 = 13595
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9638|aupr=0.9499|ppvn=0.9060
+
+3 ****Validation  Epoch-71/200: Loss = 0.013733
+******* Validation  *******
+tn = 2486, fp = 463, fn = 8, tp = 313
+y_pred: 0 = 2494 | 1 = 776
+y_true: 0 = 2949 | 1 = 321
+auc=0.9567|aupr=0.6304|ppvn=0.6168
+
+3 ****Test-1  Epoch-71/200: Loss = 0.026637
+******* Test-1  *******
+tn = 149, fp = 54, fn = 6, tp = 14
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.8342|aupr=0.2756|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-72/200 | Loss = 0.0119
+******* Training  *******
+tn = 9933, fp = 1864, fn = 98, tp = 11699
+y_pred: 0 = 10031 | 1 = 13563
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9640|aupr=0.9517|ppvn=0.9076
+
+3 ****Validation  Epoch-72/200: Loss = 0.017578
+******* Validation  *******
+tn = 2444, fp = 505, fn = 6, tp = 315
+y_pred: 0 = 2450 | 1 = 820
+y_true: 0 = 2949 | 1 = 321
+auc=0.9479|aupr=0.5827|ppvn=0.5701
+
+3 ****Test-1  Epoch-72/200: Loss = 0.032835
+******* Test-1  *******
+tn = 149, fp = 54, fn = 8, tp = 12
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8015|aupr=0.2511|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-73/200 | Loss = 0.0119
+******* Training  *******
+tn = 9901, fp = 1896, fn = 110, tp = 11687
+y_pred: 0 = 10011 | 1 = 13583
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9644|aupr=0.9517|ppvn=0.9072
+
+3 ****Validation  Epoch-73/200: Loss = 0.013558
+******* Validation  *******
+tn = 2527, fp = 422, fn = 10, tp = 311
+y_pred: 0 = 2537 | 1 = 733
+y_true: 0 = 2949 | 1 = 321
+auc=0.9480|aupr=0.5478|ppvn=0.5607
+
+3 ****Test-1  Epoch-73/200: Loss = 0.029540
+******* Test-1  *******
+tn = 149, fp = 54, fn = 6, tp = 14
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.8182|aupr=0.2517|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-74/200 | Loss = 0.0119
+******* Training  *******
+tn = 9926, fp = 1871, fn = 109, tp = 11688
+y_pred: 0 = 10035 | 1 = 13559
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9649|aupr=0.9521|ppvn=0.9096
+
+3 ****Validation  Epoch-74/200: Loss = 0.016502
+******* Validation  *******
+tn = 2462, fp = 487, fn = 7, tp = 314
+y_pred: 0 = 2469 | 1 = 801
+y_true: 0 = 2949 | 1 = 321
+auc=0.9570|aupr=0.6247|ppvn=0.6199
+
+3 ****Test-1  Epoch-74/200: Loss = 0.034733
+******* Test-1  *******
+tn = 138, fp = 65, fn = 4, tp = 16
+y_pred: 0 = 142 | 1 = 81
+y_true: 0 = 203 | 1 = 20
+auc=0.8273|aupr=0.2817|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-75/200 | Loss = 0.0119
+******* Training  *******
+tn = 9895, fp = 1902, fn = 104, tp = 11693
+y_pred: 0 = 9999 | 1 = 13595
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9640|aupr=0.9510|ppvn=0.9073
+
+3 ****Validation  Epoch-75/200: Loss = 0.015688
+******* Validation  *******
+tn = 2475, fp = 474, fn = 8, tp = 313
+y_pred: 0 = 2483 | 1 = 787
+y_true: 0 = 2949 | 1 = 321
+auc=0.9560|aupr=0.6276|ppvn=0.6075
+
+3 ****Test-1  Epoch-75/200: Loss = 0.030343
+******* Test-1  *******
+tn = 153, fp = 50, fn = 6, tp = 14
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.8190|aupr=0.2863|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-76/200 | Loss = 0.0118
+******* Training  *******
+tn = 9944, fp = 1853, fn = 128, tp = 11669
+y_pred: 0 = 10072 | 1 = 13522
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9643|aupr=0.9519|ppvn=0.9058
+
+3 ****Validation  Epoch-76/200: Loss = 0.015079
+******* Validation  *******
+tn = 2481, fp = 468, fn = 8, tp = 313
+y_pred: 0 = 2489 | 1 = 781
+y_true: 0 = 2949 | 1 = 321
+auc=0.9549|aupr=0.6013|ppvn=0.6137
+
+3 ****Test-1  Epoch-76/200: Loss = 0.029667
+******* Test-1  *******
+tn = 152, fp = 51, fn = 7, tp = 13
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.8214|aupr=0.2572|ppvn=0.2500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-77/200 | Loss = 0.0117
+******* Training  *******
+tn = 9954, fp = 1843, fn = 107, tp = 11690
+y_pred: 0 = 10061 | 1 = 13533
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9650|aupr=0.9526|ppvn=0.9090
+
+3 ****Validation  Epoch-77/200: Loss = 0.014689
+******* Validation  *******
+tn = 2497, fp = 452, fn = 11, tp = 310
+y_pred: 0 = 2508 | 1 = 762
+y_true: 0 = 2949 | 1 = 321
+auc=0.9563|aupr=0.6178|ppvn=0.6386
+
+3 ****Test-1  Epoch-77/200: Loss = 0.032372
+******* Test-1  *******
+tn = 149, fp = 54, fn = 5, tp = 15
+y_pred: 0 = 154 | 1 = 69
+y_true: 0 = 203 | 1 = 20
+auc=0.8259|aupr=0.2656|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-78/200 | Loss = 0.0117
+******* Training  *******
+tn = 10006, fp = 1791, fn = 110, tp = 11687
+y_pred: 0 = 10116 | 1 = 13478
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9655|aupr=0.9534|ppvn=0.9080
+
+3 ****Validation  Epoch-78/200: Loss = 0.015015
+******* Validation  *******
+tn = 2492, fp = 457, fn = 9, tp = 312
+y_pred: 0 = 2501 | 1 = 769
+y_true: 0 = 2949 | 1 = 321
+auc=0.9540|aupr=0.5941|ppvn=0.6012
+
+3 ****Test-1  Epoch-78/200: Loss = 0.034191
+******* Test-1  *******
+tn = 150, fp = 53, fn = 6, tp = 14
+y_pred: 0 = 156 | 1 = 67
+y_true: 0 = 203 | 1 = 20
+auc=0.8256|aupr=0.2971|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-79/200 | Loss = 0.0114
+******* Training  *******
+tn = 9996, fp = 1801, fn = 87, tp = 11710
+y_pred: 0 = 10083 | 1 = 13511
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9668|aupr=0.9551|ppvn=0.9111
+
+3 ****Validation  Epoch-79/200: Loss = 0.014665
+******* Validation  *******
+tn = 2497, fp = 452, fn = 10, tp = 311
+y_pred: 0 = 2507 | 1 = 763
+y_true: 0 = 2949 | 1 = 321
+auc=0.9571|aupr=0.6464|ppvn=0.6231
+
+3 ****Test-1  Epoch-79/200: Loss = 0.032605
+******* Test-1  *******
+tn = 153, fp = 50, fn = 7, tp = 13
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.7914|aupr=0.2375|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6463635616273048 @ epoch 79
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch79_AUPR0p646364.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-80/200 | Loss = 0.0116
+******* Training  *******
+tn = 9964, fp = 1833, fn = 140, tp = 11657
+y_pred: 0 = 10104 | 1 = 13490
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9664|aupr=0.9547|ppvn=0.9107
+
+3 ****Validation  Epoch-80/200: Loss = 0.014787
+******* Validation  *******
+tn = 2496, fp = 453, fn = 8, tp = 313
+y_pred: 0 = 2504 | 1 = 766
+y_true: 0 = 2949 | 1 = 321
+auc=0.9576|aupr=0.6311|ppvn=0.6199
+
+3 ****Test-1  Epoch-80/200: Loss = 0.029810
+******* Test-1  *******
+tn = 152, fp = 51, fn = 5, tp = 15
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8485|aupr=0.2993|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-81/200 | Loss = 0.0114
+******* Training  *******
+tn = 9998, fp = 1799, fn = 100, tp = 11697
+y_pred: 0 = 10098 | 1 = 13496
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9666|aupr=0.9550|ppvn=0.9098
+
+3 ****Validation  Epoch-81/200: Loss = 0.014788
+******* Validation  *******
+tn = 2523, fp = 426, fn = 10, tp = 311
+y_pred: 0 = 2533 | 1 = 737
+y_true: 0 = 2949 | 1 = 321
+auc=0.9536|aupr=0.5938|ppvn=0.5950
+
+3 ****Test-1  Epoch-81/200: Loss = 0.034380
+******* Test-1  *******
+tn = 145, fp = 58, fn = 4, tp = 16
+y_pred: 0 = 149 | 1 = 74
+y_true: 0 = 203 | 1 = 20
+auc=0.8293|aupr=0.3365|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-82/200 | Loss = 0.0114
+******* Training  *******
+tn = 10007, fp = 1790, fn = 117, tp = 11680
+y_pred: 0 = 10124 | 1 = 13470
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9664|aupr=0.9537|ppvn=0.9116
+
+3 ****Validation  Epoch-82/200: Loss = 0.014450
+******* Validation  *******
+tn = 2530, fp = 419, fn = 11, tp = 310
+y_pred: 0 = 2541 | 1 = 729
+y_true: 0 = 2949 | 1 = 321
+auc=0.9560|aupr=0.6182|ppvn=0.6199
+
+3 ****Test-1  Epoch-82/200: Loss = 0.032669
+******* Test-1  *******
+tn = 145, fp = 58, fn = 3, tp = 17
+y_pred: 0 = 148 | 1 = 75
+y_true: 0 = 203 | 1 = 20
+auc=0.8603|aupr=0.3250|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-83/200 | Loss = 0.0113
+******* Training  *******
+tn = 10024, fp = 1773, fn = 104, tp = 11693
+y_pred: 0 = 10128 | 1 = 13466
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9674|aupr=0.9559|ppvn=0.9113
+
+3 ****Validation  Epoch-83/200: Loss = 0.014138
+******* Validation  *******
+tn = 2522, fp = 427, fn = 12, tp = 309
+y_pred: 0 = 2534 | 1 = 736
+y_true: 0 = 2949 | 1 = 321
+auc=0.9562|aupr=0.6249|ppvn=0.6168
+
+3 ****Test-1  Epoch-83/200: Loss = 0.026501
+******* Test-1  *******
+tn = 155, fp = 48, fn = 4, tp = 16
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.8552|aupr=0.3290|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-84/200 | Loss = 0.0112
+******* Training  *******
+tn = 10013, fp = 1784, fn = 99, tp = 11698
+y_pred: 0 = 10112 | 1 = 13482
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9683|aupr=0.9577|ppvn=0.9123
+
+3 ****Validation  Epoch-84/200: Loss = 0.014452
+******* Validation  *******
+tn = 2504, fp = 445, fn = 10, tp = 311
+y_pred: 0 = 2514 | 1 = 756
+y_true: 0 = 2949 | 1 = 321
+auc=0.9563|aupr=0.6234|ppvn=0.6168
+
+3 ****Test-1  Epoch-84/200: Loss = 0.026157
+******* Test-1  *******
+tn = 157, fp = 46, fn = 7, tp = 13
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8401|aupr=0.3554|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-85/200 | Loss = 0.0114
+******* Training  *******
+tn = 10018, fp = 1779, fn = 110, tp = 11687
+y_pred: 0 = 10128 | 1 = 13466
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9670|aupr=0.9553|ppvn=0.9125
+
+3 ****Validation  Epoch-85/200: Loss = 0.015687
+******* Validation  *******
+tn = 2503, fp = 446, fn = 11, tp = 310
+y_pred: 0 = 2514 | 1 = 756
+y_true: 0 = 2949 | 1 = 321
+auc=0.9525|aupr=0.6020|ppvn=0.5826
+
+3 ****Test-1  Epoch-85/200: Loss = 0.039087
+******* Test-1  *******
+tn = 137, fp = 66, fn = 2, tp = 18
+y_pred: 0 = 139 | 1 = 84
+y_true: 0 = 203 | 1 = 20
+auc=0.8599|aupr=0.2911|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-86/200 | Loss = 0.0113
+******* Training  *******
+tn = 10047, fp = 1750, fn = 106, tp = 11691
+y_pred: 0 = 10153 | 1 = 13441
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9678|aupr=0.9567|ppvn=0.9126
+
+3 ****Validation  Epoch-86/200: Loss = 0.014464
+******* Validation  *******
+tn = 2543, fp = 406, fn = 12, tp = 309
+y_pred: 0 = 2555 | 1 = 715
+y_true: 0 = 2949 | 1 = 321
+auc=0.9539|aupr=0.6347|ppvn=0.6137
+
+3 ****Test-1  Epoch-86/200: Loss = 0.031184
+******* Test-1  *******
+tn = 164, fp = 39, fn = 10, tp = 10
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8177|aupr=0.2947|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-87/200 | Loss = 0.0113
+******* Training  *******
+tn = 10044, fp = 1753, fn = 119, tp = 11678
+y_pred: 0 = 10163 | 1 = 13431
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9681|aupr=0.9569|ppvn=0.9134
+
+3 ****Validation  Epoch-87/200: Loss = 0.015024
+******* Validation  *******
+tn = 2517, fp = 432, fn = 11, tp = 310
+y_pred: 0 = 2528 | 1 = 742
+y_true: 0 = 2949 | 1 = 321
+auc=0.9583|aupr=0.6284|ppvn=0.6355
+
+3 ****Test-1  Epoch-87/200: Loss = 0.029289
+******* Test-1  *******
+tn = 148, fp = 55, fn = 4, tp = 16
+y_pred: 0 = 152 | 1 = 71
+y_true: 0 = 203 | 1 = 20
+auc=0.8522|aupr=0.3285|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-88/200 | Loss = 0.0111
+******* Training  *******
+tn = 10066, fp = 1731, fn = 113, tp = 11684
+y_pred: 0 = 10179 | 1 = 13415
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9687|aupr=0.9582|ppvn=0.9133
+
+3 ****Validation  Epoch-88/200: Loss = 0.014210
+******* Validation  *******
+tn = 2559, fp = 390, fn = 13, tp = 308
+y_pred: 0 = 2572 | 1 = 698
+y_true: 0 = 2949 | 1 = 321
+auc=0.9492|aupr=0.5596|ppvn=0.5732
+
+3 ****Test-1  Epoch-88/200: Loss = 0.029126
+******* Test-1  *******
+tn = 156, fp = 47, fn = 6, tp = 14
+y_pred: 0 = 162 | 1 = 61
+y_true: 0 = 203 | 1 = 20
+auc=0.8401|aupr=0.3503|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-89/200 | Loss = 0.0111
+******* Training  *******
+tn = 10082, fp = 1715, fn = 120, tp = 11677
+y_pred: 0 = 10202 | 1 = 13392
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9683|aupr=0.9573|ppvn=0.9135
+
+3 ****Validation  Epoch-89/200: Loss = 0.016084
+******* Validation  *******
+tn = 2462, fp = 487, fn = 10, tp = 311
+y_pred: 0 = 2472 | 1 = 798
+y_true: 0 = 2949 | 1 = 321
+auc=0.9540|aupr=0.6017|ppvn=0.6137
+
+3 ****Test-1  Epoch-89/200: Loss = 0.026007
+******* Test-1  *******
+tn = 157, fp = 46, fn = 5, tp = 15
+y_pred: 0 = 162 | 1 = 61
+y_true: 0 = 203 | 1 = 20
+auc=0.8569|aupr=0.3575|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-90/200 | Loss = 0.0111
+******* Training  *******
+tn = 10061, fp = 1736, fn = 104, tp = 11693
+y_pred: 0 = 10165 | 1 = 13429
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9688|aupr=0.9587|ppvn=0.9137
+
+3 ****Validation  Epoch-90/200: Loss = 0.016351
+******* Validation  *******
+tn = 2490, fp = 459, fn = 10, tp = 311
+y_pred: 0 = 2500 | 1 = 770
+y_true: 0 = 2949 | 1 = 321
+auc=0.9558|aupr=0.6297|ppvn=0.6137
+
+3 ****Test-1  Epoch-90/200: Loss = 0.029869
+******* Test-1  *******
+tn = 149, fp = 54, fn = 3, tp = 17
+y_pred: 0 = 152 | 1 = 71
+y_true: 0 = 203 | 1 = 20
+auc=0.8436|aupr=0.3033|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-91/200 | Loss = 0.0111
+******* Training  *******
+tn = 10079, fp = 1718, fn = 86, tp = 11711
+y_pred: 0 = 10165 | 1 = 13429
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9687|aupr=0.9580|ppvn=0.9143
+
+3 ****Validation  Epoch-91/200: Loss = 0.014959
+******* Validation  *******
+tn = 2502, fp = 447, fn = 11, tp = 310
+y_pred: 0 = 2513 | 1 = 757
+y_true: 0 = 2949 | 1 = 321
+auc=0.9572|aupr=0.6235|ppvn=0.6199
+
+3 ****Test-1  Epoch-91/200: Loss = 0.032613
+******* Test-1  *******
+tn = 156, fp = 47, fn = 6, tp = 14
+y_pred: 0 = 162 | 1 = 61
+y_true: 0 = 203 | 1 = 20
+auc=0.8281|aupr=0.2947|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-92/200 | Loss = 0.0112
+******* Training  *******
+tn = 10061, fp = 1736, fn = 128, tp = 11669
+y_pred: 0 = 10189 | 1 = 13405
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9683|aupr=0.9570|ppvn=0.9150
+
+3 ****Validation  Epoch-92/200: Loss = 0.014492
+******* Validation  *******
+tn = 2557, fp = 392, fn = 14, tp = 307
+y_pred: 0 = 2571 | 1 = 699
+y_true: 0 = 2949 | 1 = 321
+auc=0.9558|aupr=0.6423|ppvn=0.6012
+
+3 ****Test-1  Epoch-92/200: Loss = 0.028462
+******* Test-1  *******
+tn = 167, fp = 36, fn = 7, tp = 13
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8409|aupr=0.3022|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-93/200 | Loss = 0.0108
+******* Training  *******
+tn = 10090, fp = 1707, fn = 107, tp = 11690
+y_pred: 0 = 10197 | 1 = 13397
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9706|aupr=0.9613|ppvn=0.9168
+
+3 ****Validation  Epoch-93/200: Loss = 0.014108
+******* Validation  *******
+tn = 2538, fp = 411, fn = 12, tp = 309
+y_pred: 0 = 2550 | 1 = 720
+y_true: 0 = 2949 | 1 = 321
+auc=0.9584|aupr=0.6528|ppvn=0.6012
+
+3 ****Test-1  Epoch-93/200: Loss = 0.026144
+******* Test-1  *******
+tn = 160, fp = 43, fn = 6, tp = 14
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8431|aupr=0.2962|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6528149265500549 @ epoch 93
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch93_AUPR0p652815.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-94/200 | Loss = 0.0109
+******* Training  *******
+tn = 10112, fp = 1685, fn = 119, tp = 11678
+y_pred: 0 = 10231 | 1 = 13363
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9705|aupr=0.9602|ppvn=0.9171
+
+3 ****Validation  Epoch-94/200: Loss = 0.015132
+******* Validation  *******
+tn = 2512, fp = 437, fn = 10, tp = 311
+y_pred: 0 = 2522 | 1 = 748
+y_true: 0 = 2949 | 1 = 321
+auc=0.9562|aupr=0.6344|ppvn=0.6137
+
+3 ****Test-1  Epoch-94/200: Loss = 0.033308
+******* Test-1  *******
+tn = 147, fp = 56, fn = 4, tp = 16
+y_pred: 0 = 151 | 1 = 72
+y_true: 0 = 203 | 1 = 20
+auc=0.8433|aupr=0.3548|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-95/200 | Loss = 0.0111
+******* Training  *******
+tn = 10046, fp = 1751, fn = 113, tp = 11684
+y_pred: 0 = 10159 | 1 = 13435
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9682|aupr=0.9568|ppvn=0.9126
+
+3 ****Validation  Epoch-95/200: Loss = 0.014739
+******* Validation  *******
+tn = 2540, fp = 409, fn = 11, tp = 310
+y_pred: 0 = 2551 | 1 = 719
+y_true: 0 = 2949 | 1 = 321
+auc=0.9579|aupr=0.6409|ppvn=0.6137
+
+3 ****Test-1  Epoch-95/200: Loss = 0.029661
+******* Test-1  *******
+tn = 160, fp = 43, fn = 5, tp = 15
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8438|aupr=0.3383|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-96/200 | Loss = 0.0107
+******* Training  *******
+tn = 10155, fp = 1642, fn = 99, tp = 11698
+y_pred: 0 = 10254 | 1 = 13340
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9706|aupr=0.9599|ppvn=0.9168
+
+3 ****Validation  Epoch-96/200: Loss = 0.014237
+******* Validation  *******
+tn = 2531, fp = 418, fn = 13, tp = 308
+y_pred: 0 = 2544 | 1 = 726
+y_true: 0 = 2949 | 1 = 321
+auc=0.9572|aupr=0.6130|ppvn=0.6168
+
+3 ****Test-1  Epoch-96/200: Loss = 0.023953
+******* Test-1  *******
+tn = 160, fp = 43, fn = 4, tp = 16
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8759|aupr=0.3475|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.45 @ epoch 96
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch96_PPVN0p450000.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-97/200 | Loss = 0.0107
+******* Training  *******
+tn = 10129, fp = 1668, fn = 100, tp = 11697
+y_pred: 0 = 10229 | 1 = 13365
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9713|aupr=0.9620|ppvn=0.9190
+
+3 ****Validation  Epoch-97/200: Loss = 0.013142
+******* Validation  *******
+tn = 2564, fp = 385, fn = 13, tp = 308
+y_pred: 0 = 2577 | 1 = 693
+y_true: 0 = 2949 | 1 = 321
+auc=0.9572|aupr=0.6282|ppvn=0.6199
+
+3 ****Test-1  Epoch-97/200: Loss = 0.026625
+******* Test-1  *******
+tn = 162, fp = 41, fn = 5, tp = 15
+y_pred: 0 = 167 | 1 = 56
+y_true: 0 = 203 | 1 = 20
+auc=0.8697|aupr=0.3725|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-98/200 | Loss = 0.0107
+******* Training  *******
+tn = 10131, fp = 1666, fn = 113, tp = 11684
+y_pred: 0 = 10244 | 1 = 13350
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9713|aupr=0.9618|ppvn=0.9188
+
+3 ****Validation  Epoch-98/200: Loss = 0.013897
+******* Validation  *******
+tn = 2547, fp = 402, fn = 13, tp = 308
+y_pred: 0 = 2560 | 1 = 710
+y_true: 0 = 2949 | 1 = 321
+auc=0.9570|aupr=0.6301|ppvn=0.6199
+
+3 ****Test-1  Epoch-98/200: Loss = 0.030449
+******* Test-1  *******
+tn = 153, fp = 50, fn = 4, tp = 16
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8576|aupr=0.3643|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-99/200 | Loss = 0.0108
+******* Training  *******
+tn = 10156, fp = 1641, fn = 112, tp = 11685
+y_pred: 0 = 10268 | 1 = 13326
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9697|aupr=0.9599|ppvn=0.9164
+
+3 ****Validation  Epoch-99/200: Loss = 0.013578
+******* Validation  *******
+tn = 2566, fp = 383, fn = 16, tp = 305
+y_pred: 0 = 2582 | 1 = 688
+y_true: 0 = 2949 | 1 = 321
+auc=0.9603|aupr=0.6561|ppvn=0.6199
+
+3 ****Test-1  Epoch-99/200: Loss = 0.029586
+******* Test-1  *******
+tn = 159, fp = 44, fn = 6, tp = 14
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8365|aupr=0.3481|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6560613866445852 @ epoch 99
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch99_AUPR0p656061.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-100/200 | Loss = 0.0105
+******* Training  *******
+tn = 10159, fp = 1638, fn = 101, tp = 11696
+y_pred: 0 = 10260 | 1 = 13334
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9714|aupr=0.9625|ppvn=0.9176
+
+3 ****Validation  Epoch-100/200: Loss = 0.012473
+******* Validation  *******
+tn = 2611, fp = 338, fn = 16, tp = 305
+y_pred: 0 = 2627 | 1 = 643
+y_true: 0 = 2949 | 1 = 321
+auc=0.9578|aupr=0.6322|ppvn=0.6137
+
+3 ****Test-1  Epoch-100/200: Loss = 0.025226
+******* Test-1  *******
+tn = 165, fp = 38, fn = 5, tp = 15
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8626|aupr=0.3504|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-101/200 | Loss = 0.0106
+******* Training  *******
+tn = 10148, fp = 1649, fn = 104, tp = 11693
+y_pred: 0 = 10252 | 1 = 13342
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9713|aupr=0.9625|ppvn=0.9185
+
+3 ****Validation  Epoch-101/200: Loss = 0.013702
+******* Validation  *******
+tn = 2542, fp = 407, fn = 11, tp = 310
+y_pred: 0 = 2553 | 1 = 717
+y_true: 0 = 2949 | 1 = 321
+auc=0.9577|aupr=0.6354|ppvn=0.6262
+
+3 ****Test-1  Epoch-101/200: Loss = 0.028428
+******* Test-1  *******
+tn = 156, fp = 47, fn = 4, tp = 16
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.8552|aupr=0.3687|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-102/200 | Loss = 0.0106
+******* Training  *******
+tn = 10159, fp = 1638, fn = 96, tp = 11701
+y_pred: 0 = 10255 | 1 = 13339
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9713|aupr=0.9614|ppvn=0.9196
+
+3 ****Validation  Epoch-102/200: Loss = 0.013517
+******* Validation  *******
+tn = 2549, fp = 400, fn = 16, tp = 305
+y_pred: 0 = 2565 | 1 = 705
+y_true: 0 = 2949 | 1 = 321
+auc=0.9557|aupr=0.6283|ppvn=0.6106
+
+3 ****Test-1  Epoch-102/200: Loss = 0.027593
+******* Test-1  *******
+tn = 161, fp = 42, fn = 3, tp = 17
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8768|aupr=0.3692|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-103/200 | Loss = 0.0105
+******* Training  *******
+tn = 10170, fp = 1627, fn = 111, tp = 11686
+y_pred: 0 = 10281 | 1 = 13313
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9712|aupr=0.9624|ppvn=0.9179
+
+3 ****Validation  Epoch-103/200: Loss = 0.014516
+******* Validation  *******
+tn = 2573, fp = 376, fn = 14, tp = 307
+y_pred: 0 = 2587 | 1 = 683
+y_true: 0 = 2949 | 1 = 321
+auc=0.9554|aupr=0.6167|ppvn=0.5919
+
+3 ****Test-1  Epoch-103/200: Loss = 0.036172
+******* Test-1  *******
+tn = 139, fp = 64, fn = 1, tp = 19
+y_pred: 0 = 140 | 1 = 83
+y_true: 0 = 203 | 1 = 20
+auc=0.8894|aupr=0.3389|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-104/200 | Loss = 0.0104
+******* Training  *******
+tn = 10179, fp = 1618, fn = 116, tp = 11681
+y_pred: 0 = 10295 | 1 = 13299
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9727|aupr=0.9643|ppvn=0.9195
+
+3 ****Validation  Epoch-104/200: Loss = 0.013962
+******* Validation  *******
+tn = 2553, fp = 396, fn = 13, tp = 308
+y_pred: 0 = 2566 | 1 = 704
+y_true: 0 = 2949 | 1 = 321
+auc=0.9585|aupr=0.6421|ppvn=0.6293
+
+3 ****Test-1  Epoch-104/200: Loss = 0.034728
+******* Test-1  *******
+tn = 150, fp = 53, fn = 5, tp = 15
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.8443|aupr=0.3488|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-105/200 | Loss = 0.0103
+******* Training  *******
+tn = 10197, fp = 1600, fn = 98, tp = 11699
+y_pred: 0 = 10295 | 1 = 13299
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9725|aupr=0.9636|ppvn=0.9202
+
+3 ****Validation  Epoch-105/200: Loss = 0.017039
+******* Validation  *******
+tn = 2494, fp = 455, fn = 8, tp = 313
+y_pred: 0 = 2502 | 1 = 768
+y_true: 0 = 2949 | 1 = 321
+auc=0.9571|aupr=0.6434|ppvn=0.6106
+
+3 ****Test-1  Epoch-105/200: Loss = 0.033957
+******* Test-1  *******
+tn = 148, fp = 55, fn = 6, tp = 14
+y_pred: 0 = 154 | 1 = 69
+y_true: 0 = 203 | 1 = 20
+auc=0.8406|aupr=0.3512|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-106/200 | Loss = 0.0105
+******* Training  *******
+tn = 10185, fp = 1612, fn = 100, tp = 11697
+y_pred: 0 = 10285 | 1 = 13309
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9717|aupr=0.9626|ppvn=0.9189
+
+3 ****Validation  Epoch-106/200: Loss = 0.013141
+******* Validation  *******
+tn = 2599, fp = 350, fn = 16, tp = 305
+y_pred: 0 = 2615 | 1 = 655
+y_true: 0 = 2949 | 1 = 321
+auc=0.9597|aupr=0.6471|ppvn=0.6449
+
+3 ****Test-1  Epoch-106/200: Loss = 0.027213
+******* Test-1  *******
+tn = 168, fp = 35, fn = 6, tp = 14
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8485|aupr=0.3252|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-107/200 | Loss = 0.0103
+******* Training  *******
+tn = 10226, fp = 1571, fn = 119, tp = 11678
+y_pred: 0 = 10345 | 1 = 13249
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9727|aupr=0.9653|ppvn=0.9194
+
+3 ****Validation  Epoch-107/200: Loss = 0.016204
+******* Validation  *******
+tn = 2497, fp = 452, fn = 8, tp = 313
+y_pred: 0 = 2505 | 1 = 765
+y_true: 0 = 2949 | 1 = 321
+auc=0.9577|aupr=0.6306|ppvn=0.6106
+
+3 ****Test-1  Epoch-107/200: Loss = 0.032715
+******* Test-1  *******
+tn = 145, fp = 58, fn = 3, tp = 17
+y_pred: 0 = 148 | 1 = 75
+y_true: 0 = 203 | 1 = 20
+auc=0.8732|aupr=0.3856|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-108/200 | Loss = 0.0107
+******* Training  *******
+tn = 10178, fp = 1619, fn = 98, tp = 11699
+y_pred: 0 = 10276 | 1 = 13318
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9709|aupr=0.9616|ppvn=0.9189
+
+3 ****Validation  Epoch-108/200: Loss = 0.015036
+******* Validation  *******
+tn = 2563, fp = 386, fn = 11, tp = 310
+y_pred: 0 = 2574 | 1 = 696
+y_true: 0 = 2949 | 1 = 321
+auc=0.9598|aupr=0.6692|ppvn=0.6324
+
+3 ****Test-1  Epoch-108/200: Loss = 0.029049
+******* Test-1  *******
+tn = 162, fp = 41, fn = 5, tp = 15
+y_pred: 0 = 167 | 1 = 56
+y_true: 0 = 203 | 1 = 20
+auc=0.8520|aupr=0.3647|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6692434412537469 @ epoch 108
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch108_AUPR0p669243.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-109/200 | Loss = 0.0102
+******* Training  *******
+tn = 10219, fp = 1578, fn = 103, tp = 11694
+y_pred: 0 = 10322 | 1 = 13272
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9729|aupr=0.9637|ppvn=0.9221
+
+3 ****Validation  Epoch-109/200: Loss = 0.014541
+******* Validation  *******
+tn = 2575, fp = 374, fn = 13, tp = 308
+y_pred: 0 = 2588 | 1 = 682
+y_true: 0 = 2949 | 1 = 321
+auc=0.9552|aupr=0.6052|ppvn=0.5919
+
+3 ****Test-1  Epoch-109/200: Loss = 0.030924
+******* Test-1  *******
+tn = 150, fp = 53, fn = 3, tp = 17
+y_pred: 0 = 153 | 1 = 70
+y_true: 0 = 203 | 1 = 20
+auc=0.8709|aupr=0.3236|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-110/200 | Loss = 0.0102
+******* Training  *******
+tn = 10232, fp = 1565, fn = 103, tp = 11694
+y_pred: 0 = 10335 | 1 = 13259
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9735|aupr=0.9662|ppvn=0.9214
+
+3 ****Validation  Epoch-110/200: Loss = 0.013939
+******* Validation  *******
+tn = 2574, fp = 375, fn = 18, tp = 303
+y_pred: 0 = 2592 | 1 = 678
+y_true: 0 = 2949 | 1 = 321
+auc=0.9581|aupr=0.6486|ppvn=0.6231
+
+3 ****Test-1  Epoch-110/200: Loss = 0.028457
+******* Test-1  *******
+tn = 156, fp = 47, fn = 4, tp = 16
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.8719|aupr=0.3336|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-111/200 | Loss = 0.0100
+******* Training  *******
+tn = 10245, fp = 1552, fn = 98, tp = 11699
+y_pred: 0 = 10343 | 1 = 13251
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9742|aupr=0.9671|ppvn=0.9222
+
+3 ****Validation  Epoch-111/200: Loss = 0.013846
+******* Validation  *******
+tn = 2582, fp = 367, fn = 14, tp = 307
+y_pred: 0 = 2596 | 1 = 674
+y_true: 0 = 2949 | 1 = 321
+auc=0.9607|aupr=0.6659|ppvn=0.6449
+
+3 ****Test-1  Epoch-111/200: Loss = 0.030995
+******* Test-1  *******
+tn = 161, fp = 42, fn = 7, tp = 13
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8345|aupr=0.3137|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-112/200 | Loss = 0.0101
+******* Training  *******
+tn = 10234, fp = 1563, fn = 103, tp = 11694
+y_pred: 0 = 10337 | 1 = 13257
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9743|aupr=0.9667|ppvn=0.9207
+
+3 ****Validation  Epoch-112/200: Loss = 0.014773
+******* Validation  *******
+tn = 2541, fp = 408, fn = 13, tp = 308
+y_pred: 0 = 2554 | 1 = 716
+y_true: 0 = 2949 | 1 = 321
+auc=0.9565|aupr=0.6346|ppvn=0.6262
+
+3 ****Test-1  Epoch-112/200: Loss = 0.030783
+******* Test-1  *******
+tn = 159, fp = 44, fn = 5, tp = 15
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8539|aupr=0.3269|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-113/200 | Loss = 0.0102
+******* Training  *******
+tn = 10253, fp = 1544, fn = 95, tp = 11702
+y_pred: 0 = 10348 | 1 = 13246
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9732|aupr=0.9643|ppvn=0.9229
+
+3 ****Validation  Epoch-113/200: Loss = 0.013538
+******* Validation  *******
+tn = 2588, fp = 361, fn = 13, tp = 308
+y_pred: 0 = 2601 | 1 = 669
+y_true: 0 = 2949 | 1 = 321
+auc=0.9580|aupr=0.6328|ppvn=0.6168
+
+3 ****Test-1  Epoch-113/200: Loss = 0.029022
+******* Test-1  *******
+tn = 160, fp = 43, fn = 5, tp = 15
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8677|aupr=0.3288|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-114/200 | Loss = 0.0099
+******* Training  *******
+tn = 10255, fp = 1542, fn = 85, tp = 11712
+y_pred: 0 = 10340 | 1 = 13254
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9750|aupr=0.9673|ppvn=0.9241
+
+3 ****Validation  Epoch-114/200: Loss = 0.013933
+******* Validation  *******
+tn = 2610, fp = 339, fn = 16, tp = 305
+y_pred: 0 = 2626 | 1 = 644
+y_true: 0 = 2949 | 1 = 321
+auc=0.9550|aupr=0.6197|ppvn=0.5950
+
+3 ****Test-1  Epoch-114/200: Loss = 0.028567
+******* Test-1  *******
+tn = 161, fp = 42, fn = 4, tp = 16
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8830|aupr=0.3678|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-115/200 | Loss = 0.0101
+******* Training  *******
+tn = 10260, fp = 1537, fn = 106, tp = 11691
+y_pred: 0 = 10366 | 1 = 13228
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9743|aupr=0.9663|ppvn=0.9240
+
+3 ****Validation  Epoch-115/200: Loss = 0.013314
+******* Validation  *******
+tn = 2590, fp = 359, fn = 13, tp = 308
+y_pred: 0 = 2603 | 1 = 667
+y_true: 0 = 2949 | 1 = 321
+auc=0.9591|aupr=0.6513|ppvn=0.6511
+
+3 ****Test-1  Epoch-115/200: Loss = 0.028139
+******* Test-1  *******
+tn = 161, fp = 42, fn = 4, tp = 16
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8633|aupr=0.3968|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-116/200 | Loss = 0.0099
+******* Training  *******
+tn = 10263, fp = 1534, fn = 81, tp = 11716
+y_pred: 0 = 10344 | 1 = 13250
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9750|aupr=0.9677|ppvn=0.9237
+
+3 ****Validation  Epoch-116/200: Loss = 0.012866
+******* Validation  *******
+tn = 2606, fp = 343, fn = 16, tp = 305
+y_pred: 0 = 2622 | 1 = 648
+y_true: 0 = 2949 | 1 = 321
+auc=0.9592|aupr=0.6479|ppvn=0.6324
+
+3 ****Test-1  Epoch-116/200: Loss = 0.025461
+******* Test-1  *******
+tn = 163, fp = 40, fn = 5, tp = 15
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8670|aupr=0.3749|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-117/200 | Loss = 0.0100
+******* Training  *******
+tn = 10264, fp = 1533, fn = 100, tp = 11697
+y_pred: 0 = 10364 | 1 = 13230
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9748|aupr=0.9670|ppvn=0.9252
+
+3 ****Validation  Epoch-117/200: Loss = 0.012556
+******* Validation  *******
+tn = 2587, fp = 362, fn = 16, tp = 305
+y_pred: 0 = 2603 | 1 = 667
+y_true: 0 = 2949 | 1 = 321
+auc=0.9588|aupr=0.6437|ppvn=0.6386
+
+3 ****Test-1  Epoch-117/200: Loss = 0.026260
+******* Test-1  *******
+tn = 160, fp = 43, fn = 5, tp = 15
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8884|aupr=0.4427|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-118/200 | Loss = 0.0099
+******* Training  *******
+tn = 10276, fp = 1521, fn = 81, tp = 11716
+y_pred: 0 = 10357 | 1 = 13237
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9751|aupr=0.9680|ppvn=0.9230
+
+3 ****Validation  Epoch-118/200: Loss = 0.014166
+******* Validation  *******
+tn = 2569, fp = 380, fn = 15, tp = 306
+y_pred: 0 = 2584 | 1 = 686
+y_true: 0 = 2949 | 1 = 321
+auc=0.9550|aupr=0.6281|ppvn=0.6168
+
+3 ****Test-1  Epoch-118/200: Loss = 0.025442
+******* Test-1  *******
+tn = 161, fp = 42, fn = 3, tp = 17
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8842|aupr=0.3762|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-119/200 | Loss = 0.0097
+******* Training  *******
+tn = 10322, fp = 1475, fn = 106, tp = 11691
+y_pred: 0 = 10428 | 1 = 13166
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9760|aupr=0.9694|ppvn=0.9260
+
+3 ****Validation  Epoch-119/200: Loss = 0.014990
+******* Validation  *******
+tn = 2537, fp = 412, fn = 8, tp = 313
+y_pred: 0 = 2545 | 1 = 725
+y_true: 0 = 2949 | 1 = 321
+auc=0.9591|aupr=0.6427|ppvn=0.6106
+
+3 ****Test-1  Epoch-119/200: Loss = 0.030329
+******* Test-1  *******
+tn = 151, fp = 52, fn = 2, tp = 18
+y_pred: 0 = 153 | 1 = 70
+y_true: 0 = 203 | 1 = 20
+auc=0.8961|aupr=0.4108|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-120/200 | Loss = 0.0100
+******* Training  *******
+tn = 10274, fp = 1523, fn = 94, tp = 11703
+y_pred: 0 = 10368 | 1 = 13226
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9747|aupr=0.9673|ppvn=0.9240
+
+3 ****Validation  Epoch-120/200: Loss = 0.013351
+******* Validation  *******
+tn = 2598, fp = 351, fn = 14, tp = 307
+y_pred: 0 = 2612 | 1 = 658
+y_true: 0 = 2949 | 1 = 321
+auc=0.9597|aupr=0.6542|ppvn=0.6262
+
+3 ****Test-1  Epoch-120/200: Loss = 0.029008
+******* Test-1  *******
+tn = 159, fp = 44, fn = 7, tp = 13
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8709|aupr=0.4118|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-121/200 | Loss = 0.0095
+******* Training  *******
+tn = 10334, fp = 1463, fn = 91, tp = 11706
+y_pred: 0 = 10425 | 1 = 13169
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9768|aupr=0.9698|ppvn=0.9263
+
+3 ****Validation  Epoch-121/200: Loss = 0.014572
+******* Validation  *******
+tn = 2574, fp = 375, fn = 13, tp = 308
+y_pred: 0 = 2587 | 1 = 683
+y_true: 0 = 2949 | 1 = 321
+auc=0.9556|aupr=0.6265|ppvn=0.5950
+
+3 ****Test-1  Epoch-121/200: Loss = 0.032533
+******* Test-1  *******
+tn = 143, fp = 60, fn = 2, tp = 18
+y_pred: 0 = 145 | 1 = 78
+y_true: 0 = 203 | 1 = 20
+auc=0.9015|aupr=0.4834|ppvn=0.5500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Test-PPVn exploratory: 0.55 @ epoch 121
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch121_PPVN0p550000.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-122/200 | Loss = 0.0098
+******* Training  *******
+tn = 10299, fp = 1498, fn = 103, tp = 11694
+y_pred: 0 = 10402 | 1 = 13192
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9756|aupr=0.9684|ppvn=0.9252
+
+3 ****Validation  Epoch-122/200: Loss = 0.014141
+******* Validation  *******
+tn = 2587, fp = 362, fn = 12, tp = 309
+y_pred: 0 = 2599 | 1 = 671
+y_true: 0 = 2949 | 1 = 321
+auc=0.9591|aupr=0.6424|ppvn=0.6262
+
+3 ****Test-1  Epoch-122/200: Loss = 0.028491
+******* Test-1  *******
+tn = 157, fp = 46, fn = 2, tp = 18
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.9079|aupr=0.4842|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-123/200 | Loss = 0.0096
+******* Training  *******
+tn = 10330, fp = 1467, fn = 94, tp = 11703
+y_pred: 0 = 10424 | 1 = 13170
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9760|aupr=0.9690|ppvn=0.9263
+
+3 ****Validation  Epoch-123/200: Loss = 0.016007
+******* Validation  *******
+tn = 2546, fp = 403, fn = 10, tp = 311
+y_pred: 0 = 2556 | 1 = 714
+y_true: 0 = 2949 | 1 = 321
+auc=0.9582|aupr=0.6398|ppvn=0.6168
+
+3 ****Test-1  Epoch-123/200: Loss = 0.032165
+******* Test-1  *******
+tn = 150, fp = 53, fn = 3, tp = 17
+y_pred: 0 = 153 | 1 = 70
+y_true: 0 = 203 | 1 = 20
+auc=0.8810|aupr=0.3487|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-124/200 | Loss = 0.0097
+******* Training  *******
+tn = 10326, fp = 1471, fn = 103, tp = 11694
+y_pred: 0 = 10429 | 1 = 13165
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9756|aupr=0.9677|ppvn=0.9260
+
+3 ****Validation  Epoch-124/200: Loss = 0.015006
+******* Validation  *******
+tn = 2576, fp = 373, fn = 13, tp = 308
+y_pred: 0 = 2589 | 1 = 681
+y_true: 0 = 2949 | 1 = 321
+auc=0.9582|aupr=0.6411|ppvn=0.6075
+
+3 ****Test-1  Epoch-124/200: Loss = 0.028066
+******* Test-1  *******
+tn = 155, fp = 48, fn = 3, tp = 17
+y_pred: 0 = 158 | 1 = 65
+y_true: 0 = 203 | 1 = 20
+auc=0.8906|aupr=0.4190|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-125/200 | Loss = 0.0095
+******* Training  *******
+tn = 10328, fp = 1469, fn = 88, tp = 11709
+y_pred: 0 = 10416 | 1 = 13178
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9766|aupr=0.9699|ppvn=0.9256
+
+3 ****Validation  Epoch-125/200: Loss = 0.014425
+******* Validation  *******
+tn = 2583, fp = 366, fn = 11, tp = 310
+y_pred: 0 = 2594 | 1 = 676
+y_true: 0 = 2949 | 1 = 321
+auc=0.9590|aupr=0.6389|ppvn=0.6106
+
+3 ****Test-1  Epoch-125/200: Loss = 0.034160
+******* Test-1  *******
+tn = 151, fp = 52, fn = 6, tp = 14
+y_pred: 0 = 157 | 1 = 66
+y_true: 0 = 203 | 1 = 20
+auc=0.8571|aupr=0.3912|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-126/200 | Loss = 0.0097
+******* Training  *******
+tn = 10284, fp = 1513, fn = 88, tp = 11709
+y_pred: 0 = 10372 | 1 = 13222
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9764|aupr=0.9697|ppvn=0.9246
+
+3 ****Validation  Epoch-126/200: Loss = 0.012776
+******* Validation  *******
+tn = 2634, fp = 315, fn = 20, tp = 301
+y_pred: 0 = 2654 | 1 = 616
+y_true: 0 = 2949 | 1 = 321
+auc=0.9578|aupr=0.6318|ppvn=0.5981
+
+3 ****Test-1  Epoch-126/200: Loss = 0.027121
+******* Test-1  *******
+tn = 161, fp = 42, fn = 3, tp = 17
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8887|aupr=0.4208|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-127/200 | Loss = 0.0096
+******* Training  *******
+tn = 10309, fp = 1488, fn = 102, tp = 11695
+y_pred: 0 = 10411 | 1 = 13183
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9768|aupr=0.9702|ppvn=0.9271
+
+3 ****Validation  Epoch-127/200: Loss = 0.014408
+******* Validation  *******
+tn = 2587, fp = 362, fn = 13, tp = 308
+y_pred: 0 = 2600 | 1 = 670
+y_true: 0 = 2949 | 1 = 321
+auc=0.9599|aupr=0.6557|ppvn=0.6199
+
+3 ****Test-1  Epoch-127/200: Loss = 0.033212
+******* Test-1  *******
+tn = 148, fp = 55, fn = 3, tp = 17
+y_pred: 0 = 151 | 1 = 72
+y_true: 0 = 203 | 1 = 20
+auc=0.8980|aupr=0.4523|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-128/200 | Loss = 0.0096
+******* Training  *******
+tn = 10328, fp = 1469, fn = 102, tp = 11695
+y_pred: 0 = 10430 | 1 = 13164
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9762|aupr=0.9696|ppvn=0.9256
+
+3 ****Validation  Epoch-128/200: Loss = 0.014701
+******* Validation  *******
+tn = 2567, fp = 382, fn = 9, tp = 312
+y_pred: 0 = 2576 | 1 = 694
+y_true: 0 = 2949 | 1 = 321
+auc=0.9570|aupr=0.6351|ppvn=0.5981
+
+3 ****Test-1  Epoch-128/200: Loss = 0.028229
+******* Test-1  *******
+tn = 158, fp = 45, fn = 4, tp = 16
+y_pred: 0 = 162 | 1 = 61
+y_true: 0 = 203 | 1 = 20
+auc=0.8901|aupr=0.4265|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-129/200 | Loss = 0.0095
+******* Training  *******
+tn = 10330, fp = 1467, fn = 83, tp = 11714
+y_pred: 0 = 10413 | 1 = 13181
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9766|aupr=0.9697|ppvn=0.9272
+
+3 ****Validation  Epoch-129/200: Loss = 0.013391
+******* Validation  *******
+tn = 2591, fp = 358, fn = 13, tp = 308
+y_pred: 0 = 2604 | 1 = 666
+y_true: 0 = 2949 | 1 = 321
+auc=0.9600|aupr=0.6705|ppvn=0.6168
+
+3 ****Test-1  Epoch-129/200: Loss = 0.027234
+******* Test-1  *******
+tn = 160, fp = 43, fn = 4, tp = 16
+y_pred: 0 = 164 | 1 = 59
+y_true: 0 = 203 | 1 = 20
+auc=0.8734|aupr=0.3312|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6704889813847703 @ epoch 129
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch129_AUPR0p670489.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-130/200 | Loss = 0.0096
+******* Training  *******
+tn = 10307, fp = 1490, fn = 107, tp = 11690
+y_pred: 0 = 10414 | 1 = 13180
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9767|aupr=0.9698|ppvn=0.9259
+
+3 ****Validation  Epoch-130/200: Loss = 0.013086
+******* Validation  *******
+tn = 2625, fp = 324, fn = 15, tp = 306
+y_pred: 0 = 2640 | 1 = 630
+y_true: 0 = 2949 | 1 = 321
+auc=0.9594|aupr=0.6402|ppvn=0.6262
+
+3 ****Test-1  Epoch-130/200: Loss = 0.031295
+******* Test-1  *******
+tn = 159, fp = 44, fn = 4, tp = 16
+y_pred: 0 = 163 | 1 = 60
+y_true: 0 = 203 | 1 = 20
+auc=0.8714|aupr=0.4002|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-131/200 | Loss = 0.0094
+******* Training  *******
+tn = 10340, fp = 1457, fn = 90, tp = 11707
+y_pred: 0 = 10430 | 1 = 13164
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9774|aupr=0.9709|ppvn=0.9290
+
+3 ****Validation  Epoch-131/200: Loss = 0.013067
+******* Validation  *******
+tn = 2614, fp = 335, fn = 17, tp = 304
+y_pred: 0 = 2631 | 1 = 639
+y_true: 0 = 2949 | 1 = 321
+auc=0.9589|aupr=0.6387|ppvn=0.6199
+
+3 ****Test-1  Epoch-131/200: Loss = 0.023602
+******* Test-1  *******
+tn = 166, fp = 37, fn = 4, tp = 16
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8956|aupr=0.4498|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-132/200 | Loss = 0.0094
+******* Training  *******
+tn = 10338, fp = 1459, fn = 79, tp = 11718
+y_pred: 0 = 10417 | 1 = 13177
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9774|aupr=0.9707|ppvn=0.9290
+
+3 ****Validation  Epoch-132/200: Loss = 0.012724
+******* Validation  *******
+tn = 2620, fp = 329, fn = 17, tp = 304
+y_pred: 0 = 2637 | 1 = 633
+y_true: 0 = 2949 | 1 = 321
+auc=0.9616|aupr=0.6717|ppvn=0.6449
+
+3 ****Test-1  Epoch-132/200: Loss = 0.025011
+******* Test-1  *******
+tn = 164, fp = 39, fn = 3, tp = 17
+y_pred: 0 = 167 | 1 = 56
+y_true: 0 = 203 | 1 = 20
+auc=0.8889|aupr=0.4251|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6717003903169433 @ epoch 132
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch132_AUPR0p671700.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-133/200 | Loss = 0.0093
+******* Training  *******
+tn = 10388, fp = 1409, fn = 87, tp = 11710
+y_pred: 0 = 10475 | 1 = 13119
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9778|aupr=0.9717|ppvn=0.9295
+
+3 ****Validation  Epoch-133/200: Loss = 0.014108
+******* Validation  *******
+tn = 2582, fp = 367, fn = 9, tp = 312
+y_pred: 0 = 2591 | 1 = 679
+y_true: 0 = 2949 | 1 = 321
+auc=0.9572|aupr=0.6250|ppvn=0.5950
+
+3 ****Test-1  Epoch-133/200: Loss = 0.031956
+******* Test-1  *******
+tn = 152, fp = 51, fn = 3, tp = 17
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.8800|aupr=0.3859|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-134/200 | Loss = 0.0095
+******* Training  *******
+tn = 10346, fp = 1451, fn = 95, tp = 11702
+y_pred: 0 = 10441 | 1 = 13153
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9778|aupr=0.9719|ppvn=0.9275
+
+3 ****Validation  Epoch-134/200: Loss = 0.012693
+******* Validation  *******
+tn = 2646, fp = 303, fn = 25, tp = 296
+y_pred: 0 = 2671 | 1 = 599
+y_true: 0 = 2949 | 1 = 321
+auc=0.9536|aupr=0.6018|ppvn=0.5888
+
+3 ****Test-1  Epoch-134/200: Loss = 0.026273
+******* Test-1  *******
+tn = 160, fp = 43, fn = 6, tp = 14
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8830|aupr=0.4402|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-135/200 | Loss = 0.0093
+******* Training  *******
+tn = 10399, fp = 1398, fn = 95, tp = 11702
+y_pred: 0 = 10494 | 1 = 13100
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9781|aupr=0.9722|ppvn=0.9288
+
+3 ****Validation  Epoch-135/200: Loss = 0.013559
+******* Validation  *******
+tn = 2612, fp = 337, fn = 16, tp = 305
+y_pred: 0 = 2628 | 1 = 642
+y_true: 0 = 2949 | 1 = 321
+auc=0.9604|aupr=0.6701|ppvn=0.6293
+
+3 ****Test-1  Epoch-135/200: Loss = 0.024718
+******* Test-1  *******
+tn = 163, fp = 40, fn = 3, tp = 17
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8990|aupr=0.4530|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-136/200 | Loss = 0.0093
+******* Training  *******
+tn = 10366, fp = 1431, fn = 91, tp = 11706
+y_pred: 0 = 10457 | 1 = 13137
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9777|aupr=0.9712|ppvn=0.9296
+
+3 ****Validation  Epoch-136/200: Loss = 0.014521
+******* Validation  *******
+tn = 2577, fp = 372, fn = 13, tp = 308
+y_pred: 0 = 2590 | 1 = 680
+y_true: 0 = 2949 | 1 = 321
+auc=0.9585|aupr=0.6531|ppvn=0.6106
+
+3 ****Test-1  Epoch-136/200: Loss = 0.023124
+******* Test-1  *******
+tn = 162, fp = 41, fn = 4, tp = 16
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.9012|aupr=0.4329|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-137/200 | Loss = 0.0090
+******* Training  *******
+tn = 10421, fp = 1376, fn = 95, tp = 11702
+y_pred: 0 = 10516 | 1 = 13078
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9790|aupr=0.9735|ppvn=0.9316
+
+3 ****Validation  Epoch-137/200: Loss = 0.014624
+******* Validation  *******
+tn = 2591, fp = 358, fn = 12, tp = 309
+y_pred: 0 = 2603 | 1 = 667
+y_true: 0 = 2949 | 1 = 321
+auc=0.9570|aupr=0.6386|ppvn=0.5826
+
+3 ****Test-1  Epoch-137/200: Loss = 0.023582
+******* Test-1  *******
+tn = 164, fp = 39, fn = 4, tp = 16
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8931|aupr=0.4332|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-138/200 | Loss = 0.0094
+******* Training  *******
+tn = 10405, fp = 1392, fn = 99, tp = 11698
+y_pred: 0 = 10504 | 1 = 13090
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9778|aupr=0.9716|ppvn=0.9299
+
+3 ****Validation  Epoch-138/200: Loss = 0.013491
+******* Validation  *******
+tn = 2631, fp = 318, fn = 20, tp = 301
+y_pred: 0 = 2651 | 1 = 619
+y_true: 0 = 2949 | 1 = 321
+auc=0.9551|aupr=0.6134|ppvn=0.5950
+
+3 ****Test-1  Epoch-138/200: Loss = 0.027410
+******* Test-1  *******
+tn = 166, fp = 37, fn = 4, tp = 16
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8744|aupr=0.4049|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-139/200 | Loss = 0.0093
+******* Training  *******
+tn = 10375, fp = 1422, fn = 80, tp = 11717
+y_pred: 0 = 10455 | 1 = 13139
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9778|aupr=0.9717|ppvn=0.9296
+
+3 ****Validation  Epoch-139/200: Loss = 0.015251
+******* Validation  *******
+tn = 2573, fp = 376, fn = 13, tp = 308
+y_pred: 0 = 2586 | 1 = 684
+y_true: 0 = 2949 | 1 = 321
+auc=0.9591|aupr=0.6509|ppvn=0.6262
+
+3 ****Test-1  Epoch-139/200: Loss = 0.034238
+******* Test-1  *******
+tn = 152, fp = 51, fn = 4, tp = 16
+y_pred: 0 = 156 | 1 = 67
+y_true: 0 = 203 | 1 = 20
+auc=0.8702|aupr=0.4106|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-140/200 | Loss = 0.0092
+******* Training  *******
+tn = 10405, fp = 1392, fn = 89, tp = 11708
+y_pred: 0 = 10494 | 1 = 13100
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9788|aupr=0.9733|ppvn=0.9304
+
+3 ****Validation  Epoch-140/200: Loss = 0.012693
+******* Validation  *******
+tn = 2611, fp = 338, fn = 16, tp = 305
+y_pred: 0 = 2627 | 1 = 643
+y_true: 0 = 2949 | 1 = 321
+auc=0.9611|aupr=0.6806|ppvn=0.6293
+
+3 ****Test-1  Epoch-140/200: Loss = 0.022611
+******* Test-1  *******
+tn = 168, fp = 35, fn = 4, tp = 16
+y_pred: 0 = 172 | 1 = 51
+y_true: 0 = 203 | 1 = 20
+auc=0.8990|aupr=0.4376|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6805952049047923 @ epoch 140
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch140_AUPR0p680595.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-141/200 | Loss = 0.0090
+******* Training  *******
+tn = 10405, fp = 1392, fn = 71, tp = 11726
+y_pred: 0 = 10476 | 1 = 13118
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9795|aupr=0.9738|ppvn=0.9324
+
+3 ****Validation  Epoch-141/200: Loss = 0.013843
+******* Validation  *******
+tn = 2625, fp = 324, fn = 21, tp = 300
+y_pred: 0 = 2646 | 1 = 624
+y_true: 0 = 2949 | 1 = 321
+auc=0.9587|aupr=0.6505|ppvn=0.6137
+
+3 ****Test-1  Epoch-141/200: Loss = 0.025215
+******* Test-1  *******
+tn = 168, fp = 35, fn = 3, tp = 17
+y_pred: 0 = 171 | 1 = 52
+y_true: 0 = 203 | 1 = 20
+auc=0.8970|aupr=0.4383|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-142/200 | Loss = 0.0090
+******* Training  *******
+tn = 10447, fp = 1350, fn = 82, tp = 11715
+y_pred: 0 = 10529 | 1 = 13065
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9793|aupr=0.9736|ppvn=0.9312
+
+3 ****Validation  Epoch-142/200: Loss = 0.012645
+******* Validation  *******
+tn = 2646, fp = 303, fn = 21, tp = 300
+y_pred: 0 = 2667 | 1 = 603
+y_true: 0 = 2949 | 1 = 321
+auc=0.9576|aupr=0.6277|ppvn=0.6137
+
+3 ****Test-1  Epoch-142/200: Loss = 0.025605
+******* Test-1  *******
+tn = 175, fp = 28, fn = 8, tp = 12
+y_pred: 0 = 183 | 1 = 40
+y_true: 0 = 203 | 1 = 20
+auc=0.8663|aupr=0.4038|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-143/200 | Loss = 0.0093
+******* Training  *******
+tn = 10404, fp = 1393, fn = 99, tp = 11698
+y_pred: 0 = 10503 | 1 = 13091
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9782|aupr=0.9722|ppvn=0.9287
+
+3 ****Validation  Epoch-143/200: Loss = 0.015189
+******* Validation  *******
+tn = 2577, fp = 372, fn = 14, tp = 307
+y_pred: 0 = 2591 | 1 = 679
+y_true: 0 = 2949 | 1 = 321
+auc=0.9592|aupr=0.6576|ppvn=0.6231
+
+3 ****Test-1  Epoch-143/200: Loss = 0.027991
+******* Test-1  *******
+tn = 156, fp = 47, fn = 2, tp = 18
+y_pred: 0 = 158 | 1 = 65
+y_true: 0 = 203 | 1 = 20
+auc=0.8966|aupr=0.4493|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-144/200 | Loss = 0.0090
+******* Training  *******
+tn = 10411, fp = 1386, fn = 92, tp = 11705
+y_pred: 0 = 10503 | 1 = 13091
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9795|aupr=0.9743|ppvn=0.9313
+
+3 ****Validation  Epoch-144/200: Loss = 0.013660
+******* Validation  *******
+tn = 2629, fp = 320, fn = 20, tp = 301
+y_pred: 0 = 2649 | 1 = 621
+y_true: 0 = 2949 | 1 = 321
+auc=0.9616|aupr=0.6774|ppvn=0.6511
+
+3 ****Test-1  Epoch-144/200: Loss = 0.022672
+******* Test-1  *******
+tn = 174, fp = 29, fn = 6, tp = 14
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8946|aupr=0.4345|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-145/200 | Loss = 0.0090
+******* Training  *******
+tn = 10415, fp = 1382, fn = 82, tp = 11715
+y_pred: 0 = 10497 | 1 = 13097
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9799|aupr=0.9745|ppvn=0.9322
+
+3 ****Validation  Epoch-145/200: Loss = 0.013593
+******* Validation  *******
+tn = 2613, fp = 336, fn = 17, tp = 304
+y_pred: 0 = 2630 | 1 = 640
+y_true: 0 = 2949 | 1 = 321
+auc=0.9614|aupr=0.6614|ppvn=0.6293
+
+3 ****Test-1  Epoch-145/200: Loss = 0.034566
+******* Test-1  *******
+tn = 153, fp = 50, fn = 2, tp = 18
+y_pred: 0 = 155 | 1 = 68
+y_true: 0 = 203 | 1 = 20
+auc=0.8860|aupr=0.4000|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-146/200 | Loss = 0.0087
+******* Training  *******
+tn = 10446, fp = 1351, fn = 74, tp = 11723
+y_pred: 0 = 10520 | 1 = 13074
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9809|aupr=0.9760|ppvn=0.9346
+
+3 ****Validation  Epoch-146/200: Loss = 0.013837
+******* Validation  *******
+tn = 2613, fp = 336, fn = 17, tp = 304
+y_pred: 0 = 2630 | 1 = 640
+y_true: 0 = 2949 | 1 = 321
+auc=0.9590|aupr=0.6466|ppvn=0.6199
+
+3 ****Test-1  Epoch-146/200: Loss = 0.028286
+******* Test-1  *******
+tn = 164, fp = 39, fn = 3, tp = 17
+y_pred: 0 = 167 | 1 = 56
+y_true: 0 = 203 | 1 = 20
+auc=0.8791|aupr=0.3824|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-147/200 | Loss = 0.0090
+******* Training  *******
+tn = 10434, fp = 1363, fn = 81, tp = 11716
+y_pred: 0 = 10515 | 1 = 13079
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9800|aupr=0.9748|ppvn=0.9335
+
+3 ****Validation  Epoch-147/200: Loss = 0.013592
+******* Validation  *******
+tn = 2602, fp = 347, fn = 14, tp = 307
+y_pred: 0 = 2616 | 1 = 654
+y_true: 0 = 2949 | 1 = 321
+auc=0.9601|aupr=0.6612|ppvn=0.6168
+
+3 ****Test-1  Epoch-147/200: Loss = 0.022312
+******* Test-1  *******
+tn = 170, fp = 33, fn = 4, tp = 16
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8953|aupr=0.4419|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-148/200 | Loss = 0.0091
+******* Training  *******
+tn = 10416, fp = 1381, fn = 97, tp = 11700
+y_pred: 0 = 10513 | 1 = 13081
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9795|aupr=0.9738|ppvn=0.9318
+
+3 ****Validation  Epoch-148/200: Loss = 0.013515
+******* Validation  *******
+tn = 2602, fp = 347, fn = 15, tp = 306
+y_pred: 0 = 2617 | 1 = 653
+y_true: 0 = 2949 | 1 = 321
+auc=0.9592|aupr=0.6451|ppvn=0.6044
+
+3 ****Test-1  Epoch-148/200: Loss = 0.029917
+******* Test-1  *******
+tn = 155, fp = 48, fn = 5, tp = 15
+y_pred: 0 = 160 | 1 = 63
+y_true: 0 = 203 | 1 = 20
+auc=0.8675|aupr=0.3665|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-149/200 | Loss = 0.0088
+******* Training  *******
+tn = 10468, fp = 1329, fn = 80, tp = 11717
+y_pred: 0 = 10548 | 1 = 13046
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9802|aupr=0.9746|ppvn=0.9333
+
+3 ****Validation  Epoch-149/200: Loss = 0.012759
+******* Validation  *******
+tn = 2624, fp = 325, fn = 18, tp = 303
+y_pred: 0 = 2642 | 1 = 628
+y_true: 0 = 2949 | 1 = 321
+auc=0.9623|aupr=0.6604|ppvn=0.6573
+
+3 ****Test-1  Epoch-149/200: Loss = 0.025806
+******* Test-1  *******
+tn = 162, fp = 41, fn = 3, tp = 17
+y_pred: 0 = 165 | 1 = 58
+y_true: 0 = 203 | 1 = 20
+auc=0.8968|aupr=0.4750|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-150/200 | Loss = 0.0088
+******* Training  *******
+tn = 10449, fp = 1348, fn = 91, tp = 11706
+y_pred: 0 = 10540 | 1 = 13054
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9806|aupr=0.9755|ppvn=0.9335
+
+3 ****Validation  Epoch-150/200: Loss = 0.012945
+******* Validation  *******
+tn = 2664, fp = 285, fn = 23, tp = 298
+y_pred: 0 = 2687 | 1 = 583
+y_true: 0 = 2949 | 1 = 321
+auc=0.9589|aupr=0.6506|ppvn=0.6106
+
+3 ****Test-1  Epoch-150/200: Loss = 0.030517
+******* Test-1  *******
+tn = 163, fp = 40, fn = 5, tp = 15
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8574|aupr=0.3936|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-151/200 | Loss = 0.0089
+******* Training  *******
+tn = 10474, fp = 1323, fn = 88, tp = 11709
+y_pred: 0 = 10562 | 1 = 13032
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9800|aupr=0.9743|ppvn=0.9334
+
+3 ****Validation  Epoch-151/200: Loss = 0.013894
+******* Validation  *******
+tn = 2609, fp = 340, fn = 16, tp = 305
+y_pred: 0 = 2625 | 1 = 645
+y_true: 0 = 2949 | 1 = 321
+auc=0.9580|aupr=0.6357|ppvn=0.6137
+
+3 ****Test-1  Epoch-151/200: Loss = 0.026603
+******* Test-1  *******
+tn = 173, fp = 30, fn = 4, tp = 16
+y_pred: 0 = 177 | 1 = 46
+y_true: 0 = 203 | 1 = 20
+auc=0.8707|aupr=0.3870|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-152/200 | Loss = 0.0087
+******* Training  *******
+tn = 10467, fp = 1330, fn = 89, tp = 11708
+y_pred: 0 = 10556 | 1 = 13038
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9809|aupr=0.9760|ppvn=0.9357
+
+3 ****Validation  Epoch-152/200: Loss = 0.013080
+******* Validation  *******
+tn = 2629, fp = 320, fn = 19, tp = 302
+y_pred: 0 = 2648 | 1 = 622
+y_true: 0 = 2949 | 1 = 321
+auc=0.9599|aupr=0.6628|ppvn=0.6044
+
+3 ****Test-1  Epoch-152/200: Loss = 0.024860
+******* Test-1  *******
+tn = 165, fp = 38, fn = 6, tp = 14
+y_pred: 0 = 171 | 1 = 52
+y_true: 0 = 203 | 1 = 20
+auc=0.8793|aupr=0.3592|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-153/200 | Loss = 0.0087
+******* Training  *******
+tn = 10507, fp = 1290, fn = 78, tp = 11719
+y_pred: 0 = 10585 | 1 = 13009
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9803|aupr=0.9754|ppvn=0.9333
+
+3 ****Validation  Epoch-153/200: Loss = 0.013627
+******* Validation  *******
+tn = 2607, fp = 342, fn = 15, tp = 306
+y_pred: 0 = 2622 | 1 = 648
+y_true: 0 = 2949 | 1 = 321
+auc=0.9580|aupr=0.6426|ppvn=0.5981
+
+3 ****Test-1  Epoch-153/200: Loss = 0.029380
+******* Test-1  *******
+tn = 158, fp = 45, fn = 1, tp = 19
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.8929|aupr=0.3975|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-154/200 | Loss = 0.0086
+******* Training  *******
+tn = 10495, fp = 1302, fn = 90, tp = 11707
+y_pred: 0 = 10585 | 1 = 13009
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9814|aupr=0.9772|ppvn=0.9343
+
+3 ****Validation  Epoch-154/200: Loss = 0.013654
+******* Validation  *******
+tn = 2637, fp = 312, fn = 18, tp = 303
+y_pred: 0 = 2655 | 1 = 615
+y_true: 0 = 2949 | 1 = 321
+auc=0.9610|aupr=0.6707|ppvn=0.6293
+
+3 ****Test-1  Epoch-154/200: Loss = 0.034518
+******* Test-1  *******
+tn = 166, fp = 37, fn = 6, tp = 14
+y_pred: 0 = 172 | 1 = 51
+y_true: 0 = 203 | 1 = 20
+auc=0.8557|aupr=0.3990|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-155/200 | Loss = 0.0085
+******* Training  *******
+tn = 10485, fp = 1312, fn = 83, tp = 11714
+y_pred: 0 = 10568 | 1 = 13026
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9815|aupr=0.9767|ppvn=0.9363
+
+3 ****Validation  Epoch-155/200: Loss = 0.013875
+******* Validation  *******
+tn = 2644, fp = 305, fn = 21, tp = 300
+y_pred: 0 = 2665 | 1 = 605
+y_true: 0 = 2949 | 1 = 321
+auc=0.9599|aupr=0.6529|ppvn=0.6293
+
+3 ****Test-1  Epoch-155/200: Loss = 0.035057
+******* Test-1  *******
+tn = 158, fp = 45, fn = 5, tp = 15
+y_pred: 0 = 163 | 1 = 60
+y_true: 0 = 203 | 1 = 20
+auc=0.8707|aupr=0.3564|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-156/200 | Loss = 0.0084
+******* Training  *******
+tn = 10538, fp = 1259, fn = 88, tp = 11709
+y_pred: 0 = 10626 | 1 = 12968
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9817|aupr=0.9771|ppvn=0.9366
+
+3 ****Validation  Epoch-156/200: Loss = 0.015268
+******* Validation  *******
+tn = 2613, fp = 336, fn = 19, tp = 302
+y_pred: 0 = 2632 | 1 = 638
+y_true: 0 = 2949 | 1 = 321
+auc=0.9590|aupr=0.6600|ppvn=0.6324
+
+3 ****Test-1  Epoch-156/200: Loss = 0.031263
+******* Test-1  *******
+tn = 157, fp = 46, fn = 6, tp = 14
+y_pred: 0 = 163 | 1 = 60
+y_true: 0 = 203 | 1 = 20
+auc=0.8645|aupr=0.4176|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-157/200 | Loss = 0.0087
+******* Training  *******
+tn = 10503, fp = 1294, fn = 81, tp = 11716
+y_pred: 0 = 10584 | 1 = 13010
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9813|aupr=0.9762|ppvn=0.9354
+
+3 ****Validation  Epoch-157/200: Loss = 0.013853
+******* Validation  *******
+tn = 2634, fp = 315, fn = 17, tp = 304
+y_pred: 0 = 2651 | 1 = 619
+y_true: 0 = 2949 | 1 = 321
+auc=0.9603|aupr=0.6617|ppvn=0.6355
+
+3 ****Test-1  Epoch-157/200: Loss = 0.026098
+******* Test-1  *******
+tn = 163, fp = 40, fn = 5, tp = 15
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8808|aupr=0.4045|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-158/200 | Loss = 0.0086
+******* Training  *******
+tn = 10507, fp = 1290, fn = 79, tp = 11718
+y_pred: 0 = 10586 | 1 = 13008
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9818|aupr=0.9766|ppvn=0.9366
+
+3 ****Validation  Epoch-158/200: Loss = 0.013297
+******* Validation  *******
+tn = 2615, fp = 334, fn = 17, tp = 304
+y_pred: 0 = 2632 | 1 = 638
+y_true: 0 = 2949 | 1 = 321
+auc=0.9623|aupr=0.6716|ppvn=0.6355
+
+3 ****Test-1  Epoch-158/200: Loss = 0.028461
+******* Test-1  *******
+tn = 165, fp = 38, fn = 4, tp = 16
+y_pred: 0 = 169 | 1 = 54
+y_true: 0 = 203 | 1 = 20
+auc=0.8887|aupr=0.4360|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-159/200 | Loss = 0.0084
+******* Training  *******
+tn = 10538, fp = 1259, fn = 77, tp = 11720
+y_pred: 0 = 10615 | 1 = 12979
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9823|aupr=0.9779|ppvn=0.9371
+
+3 ****Validation  Epoch-159/200: Loss = 0.014385
+******* Validation  *******
+tn = 2641, fp = 308, fn = 23, tp = 298
+y_pred: 0 = 2664 | 1 = 606
+y_true: 0 = 2949 | 1 = 321
+auc=0.9555|aupr=0.6231|ppvn=0.6137
+
+3 ****Test-1  Epoch-159/200: Loss = 0.030687
+******* Test-1  *******
+tn = 166, fp = 37, fn = 5, tp = 15
+y_pred: 0 = 171 | 1 = 52
+y_true: 0 = 203 | 1 = 20
+auc=0.8643|aupr=0.3190|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-160/200 | Loss = 0.0086
+******* Training  *******
+tn = 10509, fp = 1288, fn = 75, tp = 11722
+y_pred: 0 = 10584 | 1 = 13010
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9814|aupr=0.9765|ppvn=0.9354
+
+3 ****Validation  Epoch-160/200: Loss = 0.013287
+******* Validation  *******
+tn = 2654, fp = 295, fn = 24, tp = 297
+y_pred: 0 = 2678 | 1 = 592
+y_true: 0 = 2949 | 1 = 321
+auc=0.9595|aupr=0.6538|ppvn=0.6355
+
+3 ****Test-1  Epoch-160/200: Loss = 0.026870
+******* Test-1  *******
+tn = 171, fp = 32, fn = 7, tp = 13
+y_pred: 0 = 178 | 1 = 45
+y_true: 0 = 203 | 1 = 20
+auc=0.8576|aupr=0.3840|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-161/200 | Loss = 0.0085
+******* Training  *******
+tn = 10527, fp = 1270, fn = 82, tp = 11715
+y_pred: 0 = 10609 | 1 = 12985
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9818|aupr=0.9769|ppvn=0.9359
+
+3 ****Validation  Epoch-161/200: Loss = 0.012756
+******* Validation  *******
+tn = 2651, fp = 298, fn = 19, tp = 302
+y_pred: 0 = 2670 | 1 = 600
+y_true: 0 = 2949 | 1 = 321
+auc=0.9610|aupr=0.6591|ppvn=0.6231
+
+3 ****Test-1  Epoch-161/200: Loss = 0.026628
+******* Test-1  *******
+tn = 171, fp = 32, fn = 8, tp = 12
+y_pred: 0 = 179 | 1 = 44
+y_true: 0 = 203 | 1 = 20
+auc=0.8709|aupr=0.4273|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-162/200 | Loss = 0.0086
+******* Training  *******
+tn = 10499, fp = 1298, fn = 74, tp = 11723
+y_pred: 0 = 10573 | 1 = 13021
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9817|aupr=0.9768|ppvn=0.9366
+
+3 ****Validation  Epoch-162/200: Loss = 0.014588
+******* Validation  *******
+tn = 2622, fp = 327, fn = 23, tp = 298
+y_pred: 0 = 2645 | 1 = 625
+y_true: 0 = 2949 | 1 = 321
+auc=0.9558|aupr=0.6239|ppvn=0.5950
+
+3 ****Test-1  Epoch-162/200: Loss = 0.034830
+******* Test-1  *******
+tn = 155, fp = 48, fn = 3, tp = 17
+y_pred: 0 = 158 | 1 = 65
+y_true: 0 = 203 | 1 = 20
+auc=0.8749|aupr=0.4049|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-163/200 | Loss = 0.0086
+******* Training  *******
+tn = 10497, fp = 1300, fn = 86, tp = 11711
+y_pred: 0 = 10583 | 1 = 13011
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9813|aupr=0.9764|ppvn=0.9374
+
+3 ****Validation  Epoch-163/200: Loss = 0.013444
+******* Validation  *******
+tn = 2668, fp = 281, fn = 28, tp = 293
+y_pred: 0 = 2696 | 1 = 574
+y_true: 0 = 2949 | 1 = 321
+auc=0.9618|aupr=0.6672|ppvn=0.6511
+
+3 ****Test-1  Epoch-163/200: Loss = 0.026175
+******* Test-1  *******
+tn = 173, fp = 30, fn = 6, tp = 14
+y_pred: 0 = 179 | 1 = 44
+y_true: 0 = 203 | 1 = 20
+auc=0.8796|aupr=0.4288|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-164/200 | Loss = 0.0083
+******* Training  *******
+tn = 10555, fp = 1242, fn = 93, tp = 11704
+y_pred: 0 = 10648 | 1 = 12946
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9822|aupr=0.9775|ppvn=0.9378
+
+3 ****Validation  Epoch-164/200: Loss = 0.014070
+******* Validation  *******
+tn = 2614, fp = 335, fn = 18, tp = 303
+y_pred: 0 = 2632 | 1 = 638
+y_true: 0 = 2949 | 1 = 321
+auc=0.9601|aupr=0.6641|ppvn=0.6355
+
+3 ****Test-1  Epoch-164/200: Loss = 0.028791
+******* Test-1  *******
+tn = 161, fp = 42, fn = 5, tp = 15
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8672|aupr=0.3871|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-165/200 | Loss = 0.0080
+******* Training  *******
+tn = 10571, fp = 1226, fn = 72, tp = 11725
+y_pred: 0 = 10643 | 1 = 12951
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9835|aupr=0.9792|ppvn=0.9411
+
+3 ****Validation  Epoch-165/200: Loss = 0.014485
+******* Validation  *******
+tn = 2597, fp = 352, fn = 16, tp = 305
+y_pred: 0 = 2613 | 1 = 657
+y_true: 0 = 2949 | 1 = 321
+auc=0.9568|aupr=0.6165|ppvn=0.5857
+
+3 ****Test-1  Epoch-165/200: Loss = 0.023713
+******* Test-1  *******
+tn = 175, fp = 28, fn = 5, tp = 15
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8894|aupr=0.4367|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-166/200 | Loss = 0.0085
+******* Training  *******
+tn = 10549, fp = 1248, fn = 83, tp = 11714
+y_pred: 0 = 10632 | 1 = 12962
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9821|aupr=0.9776|ppvn=0.9365
+
+3 ****Validation  Epoch-166/200: Loss = 0.013681
+******* Validation  *******
+tn = 2641, fp = 308, fn = 22, tp = 299
+y_pred: 0 = 2663 | 1 = 607
+y_true: 0 = 2949 | 1 = 321
+auc=0.9612|aupr=0.6644|ppvn=0.6324
+
+3 ****Test-1  Epoch-166/200: Loss = 0.027052
+******* Test-1  *******
+tn = 171, fp = 32, fn = 7, tp = 13
+y_pred: 0 = 178 | 1 = 45
+y_true: 0 = 203 | 1 = 20
+auc=0.8635|aupr=0.3641|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-167/200 | Loss = 0.0083
+******* Training  *******
+tn = 10549, fp = 1248, fn = 79, tp = 11718
+y_pred: 0 = 10628 | 1 = 12966
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9828|aupr=0.9782|ppvn=0.9402
+
+3 ****Validation  Epoch-167/200: Loss = 0.014198
+******* Validation  *******
+tn = 2644, fp = 305, fn = 19, tp = 302
+y_pred: 0 = 2663 | 1 = 607
+y_true: 0 = 2949 | 1 = 321
+auc=0.9638|aupr=0.6921|ppvn=0.6667
+
+3 ****Test-1  Epoch-167/200: Loss = 0.031527
+******* Test-1  *******
+tn = 166, fp = 37, fn = 6, tp = 14
+y_pred: 0 = 172 | 1 = 51
+y_true: 0 = 203 | 1 = 20
+auc=0.8685|aupr=0.4166|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.6920790941683944 @ epoch 167
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch167_AUPR0p692079.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-168/200 | Loss = 0.0083
+******* Training  *******
+tn = 10550, fp = 1247, fn = 74, tp = 11723
+y_pred: 0 = 10624 | 1 = 12970
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9825|aupr=0.9776|ppvn=0.9386
+
+3 ****Validation  Epoch-168/200: Loss = 0.013889
+******* Validation  *******
+tn = 2618, fp = 331, fn = 20, tp = 301
+y_pred: 0 = 2638 | 1 = 632
+y_true: 0 = 2949 | 1 = 321
+auc=0.9609|aupr=0.6666|ppvn=0.6262
+
+3 ****Test-1  Epoch-168/200: Loss = 0.025248
+******* Test-1  *******
+tn = 168, fp = 35, fn = 6, tp = 14
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8761|aupr=0.4097|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-169/200 | Loss = 0.0083
+******* Training  *******
+tn = 10564, fp = 1233, fn = 79, tp = 11718
+y_pred: 0 = 10643 | 1 = 12951
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9825|aupr=0.9779|ppvn=0.9395
+
+3 ****Validation  Epoch-169/200: Loss = 0.012634
+******* Validation  *******
+tn = 2646, fp = 303, fn = 20, tp = 301
+y_pred: 0 = 2666 | 1 = 604
+y_true: 0 = 2949 | 1 = 321
+auc=0.9638|aupr=0.6913|ppvn=0.6449
+
+3 ****Test-1  Epoch-169/200: Loss = 0.029456
+******* Test-1  *******
+tn = 166, fp = 37, fn = 4, tp = 16
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8825|aupr=0.4371|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-170/200 | Loss = 0.0081
+******* Training  *******
+tn = 10613, fp = 1184, fn = 88, tp = 11709
+y_pred: 0 = 10701 | 1 = 12893
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9832|aupr=0.9789|ppvn=0.9397
+
+3 ****Validation  Epoch-170/200: Loss = 0.013251
+******* Validation  *******
+tn = 2663, fp = 286, fn = 21, tp = 300
+y_pred: 0 = 2684 | 1 = 586
+y_true: 0 = 2949 | 1 = 321
+auc=0.9635|aupr=0.6978|ppvn=0.6573
+
+3 ****Test-1  Epoch-170/200: Loss = 0.031950
+******* Test-1  *******
+tn = 173, fp = 30, fn = 7, tp = 13
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8736|aupr=0.4092|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.697804517612703 @ epoch 170
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch170_AUPR0p697805.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-171/200 | Loss = 0.0082
+******* Training  *******
+tn = 10545, fp = 1252, fn = 69, tp = 11728
+y_pred: 0 = 10614 | 1 = 12980
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9835|aupr=0.9791|ppvn=0.9395
+
+3 ****Validation  Epoch-171/200: Loss = 0.013488
+******* Validation  *******
+tn = 2644, fp = 305, fn = 19, tp = 302
+y_pred: 0 = 2663 | 1 = 607
+y_true: 0 = 2949 | 1 = 321
+auc=0.9607|aupr=0.6642|ppvn=0.6106
+
+3 ****Test-1  Epoch-171/200: Loss = 0.025713
+******* Test-1  *******
+tn = 169, fp = 34, fn = 4, tp = 16
+y_pred: 0 = 173 | 1 = 50
+y_true: 0 = 203 | 1 = 20
+auc=0.8892|aupr=0.4364|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-172/200 | Loss = 0.0078
+******* Training  *******
+tn = 10607, fp = 1190, fn = 65, tp = 11732
+y_pred: 0 = 10672 | 1 = 12922
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9844|aupr=0.9805|ppvn=0.9415
+
+3 ****Validation  Epoch-172/200: Loss = 0.012600
+******* Validation  *******
+tn = 2658, fp = 291, fn = 25, tp = 296
+y_pred: 0 = 2683 | 1 = 587
+y_true: 0 = 2949 | 1 = 321
+auc=0.9626|aupr=0.6865|ppvn=0.6542
+
+3 ****Test-1  Epoch-172/200: Loss = 0.023736
+******* Test-1  *******
+tn = 173, fp = 30, fn = 7, tp = 13
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8828|aupr=0.4265|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-173/200 | Loss = 0.0080
+******* Training  *******
+tn = 10575, fp = 1222, fn = 70, tp = 11727
+y_pred: 0 = 10645 | 1 = 12949
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9836|aupr=0.9797|ppvn=0.9412
+
+3 ****Validation  Epoch-173/200: Loss = 0.013437
+******* Validation  *******
+tn = 2662, fp = 287, fn = 27, tp = 294
+y_pred: 0 = 2689 | 1 = 581
+y_true: 0 = 2949 | 1 = 321
+auc=0.9602|aupr=0.6710|ppvn=0.6355
+
+3 ****Test-1  Epoch-173/200: Loss = 0.038347
+******* Test-1  *******
+tn = 167, fp = 36, fn = 7, tp = 13
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8453|aupr=0.3681|ppvn=0.3000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-174/200 | Loss = 0.0080
+******* Training  *******
+tn = 10607, fp = 1190, fn = 87, tp = 11710
+y_pred: 0 = 10694 | 1 = 12900
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9836|aupr=0.9794|ppvn=0.9414
+
+3 ****Validation  Epoch-174/200: Loss = 0.012713
+******* Validation  *******
+tn = 2654, fp = 295, fn = 24, tp = 297
+y_pred: 0 = 2678 | 1 = 592
+y_true: 0 = 2949 | 1 = 321
+auc=0.9619|aupr=0.6841|ppvn=0.6480
+
+3 ****Test-1  Epoch-174/200: Loss = 0.026003
+******* Test-1  *******
+tn = 175, fp = 28, fn = 6, tp = 14
+y_pred: 0 = 181 | 1 = 42
+y_true: 0 = 203 | 1 = 20
+auc=0.8805|aupr=0.4499|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-175/200 | Loss = 0.0080
+******* Training  *******
+tn = 10596, fp = 1201, fn = 78, tp = 11719
+y_pred: 0 = 10674 | 1 = 12920
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9835|aupr=0.9796|ppvn=0.9394
+
+3 ****Validation  Epoch-175/200: Loss = 0.013818
+******* Validation  *******
+tn = 2640, fp = 309, fn = 21, tp = 300
+y_pred: 0 = 2661 | 1 = 609
+y_true: 0 = 2949 | 1 = 321
+auc=0.9618|aupr=0.6789|ppvn=0.6511
+
+3 ****Test-1  Epoch-175/200: Loss = 0.029705
+******* Test-1  *******
+tn = 166, fp = 37, fn = 4, tp = 16
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8887|aupr=0.4780|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-176/200 | Loss = 0.0081
+******* Training  *******
+tn = 10605, fp = 1192, fn = 78, tp = 11719
+y_pred: 0 = 10683 | 1 = 12911
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9837|aupr=0.9795|ppvn=0.9404
+
+3 ****Validation  Epoch-176/200: Loss = 0.013166
+******* Validation  *******
+tn = 2659, fp = 290, fn = 22, tp = 299
+y_pred: 0 = 2681 | 1 = 589
+y_true: 0 = 2949 | 1 = 321
+auc=0.9620|aupr=0.6764|ppvn=0.6480
+
+3 ****Test-1  Epoch-176/200: Loss = 0.026841
+******* Test-1  *******
+tn = 166, fp = 37, fn = 5, tp = 15
+y_pred: 0 = 171 | 1 = 52
+y_true: 0 = 203 | 1 = 20
+auc=0.8766|aupr=0.4597|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-177/200 | Loss = 0.0077
+******* Training  *******
+tn = 10617, fp = 1180, fn = 74, tp = 11723
+y_pred: 0 = 10691 | 1 = 12903
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9850|aupr=0.9817|ppvn=0.9433
+
+3 ****Validation  Epoch-177/200: Loss = 0.013705
+******* Validation  *******
+tn = 2632, fp = 317, fn = 16, tp = 305
+y_pred: 0 = 2648 | 1 = 622
+y_true: 0 = 2949 | 1 = 321
+auc=0.9616|aupr=0.6733|ppvn=0.6449
+
+3 ****Test-1  Epoch-177/200: Loss = 0.028026
+******* Test-1  *******
+tn = 171, fp = 32, fn = 5, tp = 15
+y_pred: 0 = 176 | 1 = 47
+y_true: 0 = 203 | 1 = 20
+auc=0.8840|aupr=0.4379|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-178/200 | Loss = 0.0076
+******* Training  *******
+tn = 10653, fp = 1144, fn = 71, tp = 11726
+y_pred: 0 = 10724 | 1 = 12870
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9854|aupr=0.9821|ppvn=0.9444
+
+3 ****Validation  Epoch-178/200: Loss = 0.014448
+******* Validation  *******
+tn = 2616, fp = 333, fn = 15, tp = 306
+y_pred: 0 = 2631 | 1 = 639
+y_true: 0 = 2949 | 1 = 321
+auc=0.9617|aupr=0.6672|ppvn=0.6324
+
+3 ****Test-1  Epoch-178/200: Loss = 0.033433
+******* Test-1  *******
+tn = 163, fp = 40, fn = 5, tp = 15
+y_pred: 0 = 168 | 1 = 55
+y_true: 0 = 203 | 1 = 20
+auc=0.8761|aupr=0.4111|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-179/200 | Loss = 0.0077
+******* Training  *******
+tn = 10641, fp = 1156, fn = 75, tp = 11722
+y_pred: 0 = 10716 | 1 = 12878
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9849|aupr=0.9815|ppvn=0.9415
+
+3 ****Validation  Epoch-179/200: Loss = 0.013238
+******* Validation  *******
+tn = 2643, fp = 306, fn = 18, tp = 303
+y_pred: 0 = 2661 | 1 = 609
+y_true: 0 = 2949 | 1 = 321
+auc=0.9609|aupr=0.6581|ppvn=0.6386
+
+3 ****Test-1  Epoch-179/200: Loss = 0.029514
+******* Test-1  *******
+tn = 171, fp = 32, fn = 3, tp = 17
+y_pred: 0 = 174 | 1 = 49
+y_true: 0 = 203 | 1 = 20
+auc=0.8746|aupr=0.4155|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-180/200 | Loss = 0.0078
+******* Training  *******
+tn = 10658, fp = 1139, fn = 79, tp = 11718
+y_pred: 0 = 10737 | 1 = 12857
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9848|aupr=0.9808|ppvn=0.9427
+
+3 ****Validation  Epoch-180/200: Loss = 0.013228
+******* Validation  *******
+tn = 2687, fp = 262, fn = 28, tp = 293
+y_pred: 0 = 2715 | 1 = 555
+y_true: 0 = 2949 | 1 = 321
+auc=0.9632|aupr=0.6807|ppvn=0.6480
+
+3 ****Test-1  Epoch-180/200: Loss = 0.038256
+******* Test-1  *******
+tn = 170, fp = 33, fn = 6, tp = 14
+y_pred: 0 = 176 | 1 = 47
+y_true: 0 = 203 | 1 = 20
+auc=0.8601|aupr=0.4350|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-181/200 | Loss = 0.0078
+******* Training  *******
+tn = 10629, fp = 1168, fn = 87, tp = 11710
+y_pred: 0 = 10716 | 1 = 12878
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9843|aupr=0.9803|ppvn=0.9409
+
+3 ****Validation  Epoch-181/200: Loss = 0.013643
+******* Validation  *******
+tn = 2667, fp = 282, fn = 22, tp = 299
+y_pred: 0 = 2689 | 1 = 581
+y_true: 0 = 2949 | 1 = 321
+auc=0.9612|aupr=0.6667|ppvn=0.6262
+
+3 ****Test-1  Epoch-181/200: Loss = 0.033219
+******* Test-1  *******
+tn = 164, fp = 39, fn = 6, tp = 14
+y_pred: 0 = 170 | 1 = 53
+y_true: 0 = 203 | 1 = 20
+auc=0.8793|aupr=0.4219|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-182/200 | Loss = 0.0075
+******* Training  *******
+tn = 10651, fp = 1146, fn = 69, tp = 11728
+y_pred: 0 = 10720 | 1 = 12874
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9856|aupr=0.9825|ppvn=0.9435
+
+3 ****Validation  Epoch-182/200: Loss = 0.014040
+******* Validation  *******
+tn = 2648, fp = 301, fn = 18, tp = 303
+y_pred: 0 = 2666 | 1 = 604
+y_true: 0 = 2949 | 1 = 321
+auc=0.9646|aupr=0.7024|ppvn=0.6636
+
+3 ****Test-1  Epoch-182/200: Loss = 0.030688
+******* Test-1  *******
+tn = 174, fp = 29, fn = 6, tp = 14
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8744|aupr=0.4408|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Best Model Updated] Val-AUPR primary: 0.7024346434262156 @ epoch 182
+  saved_model: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch182_AUPR0p702435.pkl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-183/200 | Loss = 0.0079
+******* Training  *******
+tn = 10632, fp = 1165, fn = 91, tp = 11706
+y_pred: 0 = 10723 | 1 = 12871
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9845|aupr=0.9803|ppvn=0.9434
+
+3 ****Validation  Epoch-183/200: Loss = 0.014045
+******* Validation  *******
+tn = 2676, fp = 273, fn = 24, tp = 297
+y_pred: 0 = 2700 | 1 = 570
+y_true: 0 = 2949 | 1 = 321
+auc=0.9622|aupr=0.6807|ppvn=0.6417
+
+3 ****Test-1  Epoch-183/200: Loss = 0.027805
+******* Test-1  *******
+tn = 169, fp = 34, fn = 7, tp = 13
+y_pred: 0 = 176 | 1 = 47
+y_true: 0 = 203 | 1 = 20
+auc=0.8663|aupr=0.4031|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-184/200 | Loss = 0.0077
+******* Training  *******
+tn = 10675, fp = 1122, fn = 74, tp = 11723
+y_pred: 0 = 10749 | 1 = 12845
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9848|aupr=0.9807|ppvn=0.9442
+
+3 ****Validation  Epoch-184/200: Loss = 0.013872
+******* Validation  *******
+tn = 2673, fp = 276, fn = 31, tp = 290
+y_pred: 0 = 2704 | 1 = 566
+y_true: 0 = 2949 | 1 = 321
+auc=0.9579|aupr=0.6442|ppvn=0.6168
+
+3 ****Test-1  Epoch-184/200: Loss = 0.031551
+******* Test-1  *******
+tn = 161, fp = 42, fn = 5, tp = 15
+y_pred: 0 = 166 | 1 = 57
+y_true: 0 = 203 | 1 = 20
+auc=0.8564|aupr=0.3731|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-185/200 | Loss = 0.0079
+******* Training  *******
+tn = 10658, fp = 1139, fn = 72, tp = 11725
+y_pred: 0 = 10730 | 1 = 12864
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9845|aupr=0.9808|ppvn=0.9435
+
+3 ****Validation  Epoch-185/200: Loss = 0.015375
+******* Validation  *******
+tn = 2614, fp = 335, fn = 20, tp = 301
+y_pred: 0 = 2634 | 1 = 636
+y_true: 0 = 2949 | 1 = 321
+auc=0.9580|aupr=0.6393|ppvn=0.6075
+
+3 ****Test-1  Epoch-185/200: Loss = 0.035559
+******* Test-1  *******
+tn = 156, fp = 47, fn = 3, tp = 17
+y_pred: 0 = 159 | 1 = 64
+y_true: 0 = 203 | 1 = 20
+auc=0.8744|aupr=0.4018|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-186/200 | Loss = 0.0077
+******* Training  *******
+tn = 10616, fp = 1181, fn = 77, tp = 11720
+y_pred: 0 = 10693 | 1 = 12901
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9854|aupr=0.9822|ppvn=0.9432
+
+3 ****Validation  Epoch-186/200: Loss = 0.013895
+******* Validation  *******
+tn = 2666, fp = 283, fn = 27, tp = 294
+y_pred: 0 = 2693 | 1 = 577
+y_true: 0 = 2949 | 1 = 321
+auc=0.9630|aupr=0.6968|ppvn=0.6636
+
+3 ****Test-1  Epoch-186/200: Loss = 0.027667
+******* Test-1  *******
+tn = 171, fp = 32, fn = 7, tp = 13
+y_pred: 0 = 178 | 1 = 45
+y_true: 0 = 203 | 1 = 20
+auc=0.8739|aupr=0.4091|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-187/200 | Loss = 0.0076
+******* Training  *******
+tn = 10695, fp = 1102, fn = 83, tp = 11714
+y_pred: 0 = 10778 | 1 = 12816
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9855|aupr=0.9818|ppvn=0.9449
+
+3 ****Validation  Epoch-187/200: Loss = 0.014031
+******* Validation  *******
+tn = 2657, fp = 292, fn = 26, tp = 295
+y_pred: 0 = 2683 | 1 = 587
+y_true: 0 = 2949 | 1 = 321
+auc=0.9625|aupr=0.6830|ppvn=0.6542
+
+3 ****Test-1  Epoch-187/200: Loss = 0.032016
+******* Test-1  *******
+tn = 169, fp = 34, fn = 6, tp = 14
+y_pred: 0 = 175 | 1 = 48
+y_true: 0 = 203 | 1 = 20
+auc=0.8547|aupr=0.3949|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-188/200 | Loss = 0.0074
+******* Training  *******
+tn = 10705, fp = 1092, fn = 69, tp = 11728
+y_pred: 0 = 10774 | 1 = 12820
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9856|aupr=0.9819|ppvn=0.9454
+
+3 ****Validation  Epoch-188/200: Loss = 0.013125
+******* Validation  *******
+tn = 2671, fp = 278, fn = 23, tp = 298
+y_pred: 0 = 2694 | 1 = 576
+y_true: 0 = 2949 | 1 = 321
+auc=0.9625|aupr=0.6712|ppvn=0.6417
+
+3 ****Test-1  Epoch-188/200: Loss = 0.034257
+******* Test-1  *******
+tn = 169, fp = 34, fn = 6, tp = 14
+y_pred: 0 = 175 | 1 = 48
+y_true: 0 = 203 | 1 = 20
+auc=0.8586|aupr=0.4323|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-189/200 | Loss = 0.0078
+******* Training  *******
+tn = 10640, fp = 1157, fn = 67, tp = 11730
+y_pred: 0 = 10707 | 1 = 12887
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9849|aupr=0.9814|ppvn=0.9438
+
+3 ****Validation  Epoch-189/200: Loss = 0.013533
+******* Validation  *******
+tn = 2683, fp = 266, fn = 25, tp = 296
+y_pred: 0 = 2708 | 1 = 562
+y_true: 0 = 2949 | 1 = 321
+auc=0.9642|aupr=0.6872|ppvn=0.6542
+
+3 ****Test-1  Epoch-189/200: Loss = 0.025872
+******* Test-1  *******
+tn = 180, fp = 23, fn = 8, tp = 12
+y_pred: 0 = 188 | 1 = 35
+y_true: 0 = 203 | 1 = 20
+auc=0.8815|aupr=0.4343|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-190/200 | Loss = 0.0078
+******* Training  *******
+tn = 10627, fp = 1170, fn = 91, tp = 11706
+y_pred: 0 = 10718 | 1 = 12876
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9849|aupr=0.9816|ppvn=0.9435
+
+3 ****Validation  Epoch-190/200: Loss = 0.014449
+******* Validation  *******
+tn = 2685, fp = 264, fn = 28, tp = 293
+y_pred: 0 = 2713 | 1 = 557
+y_true: 0 = 2949 | 1 = 321
+auc=0.9610|aupr=0.6739|ppvn=0.6355
+
+3 ****Test-1  Epoch-190/200: Loss = 0.037574
+******* Test-1  *******
+tn = 168, fp = 35, fn = 8, tp = 12
+y_pred: 0 = 176 | 1 = 47
+y_true: 0 = 203 | 1 = 20
+auc=0.8268|aupr=0.3627|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-191/200 | Loss = 0.0078
+******* Training  *******
+tn = 10651, fp = 1146, fn = 83, tp = 11714
+y_pred: 0 = 10734 | 1 = 12860
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9853|aupr=0.9817|ppvn=0.9447
+
+3 ****Validation  Epoch-191/200: Loss = 0.014332
+******* Validation  *******
+tn = 2677, fp = 272, fn = 26, tp = 295
+y_pred: 0 = 2703 | 1 = 567
+y_true: 0 = 2949 | 1 = 321
+auc=0.9626|aupr=0.6938|ppvn=0.6511
+
+3 ****Test-1  Epoch-191/200: Loss = 0.032444
+******* Test-1  *******
+tn = 175, fp = 28, fn = 10, tp = 10
+y_pred: 0 = 185 | 1 = 38
+y_true: 0 = 203 | 1 = 20
+auc=0.8478|aupr=0.3911|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-192/200 | Loss = 0.0077
+******* Training  *******
+tn = 10670, fp = 1127, fn = 91, tp = 11706
+y_pred: 0 = 10761 | 1 = 12833
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9850|aupr=0.9815|ppvn=0.9436
+
+3 ****Validation  Epoch-192/200: Loss = 0.014403
+******* Validation  *******
+tn = 2642, fp = 307, fn = 19, tp = 302
+y_pred: 0 = 2661 | 1 = 609
+y_true: 0 = 2949 | 1 = 321
+auc=0.9616|aupr=0.6734|ppvn=0.6417
+
+3 ****Test-1  Epoch-192/200: Loss = 0.031833
+******* Test-1  *******
+tn = 164, fp = 39, fn = 5, tp = 15
+y_pred: 0 = 169 | 1 = 54
+y_true: 0 = 203 | 1 = 20
+auc=0.8663|aupr=0.4262|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-193/200 | Loss = 0.0074
+******* Training  *******
+tn = 10706, fp = 1091, fn = 56, tp = 11741
+y_pred: 0 = 10762 | 1 = 12832
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9856|aupr=0.9814|ppvn=0.9460
+
+3 ****Validation  Epoch-193/200: Loss = 0.013430
+******* Validation  *******
+tn = 2694, fp = 255, fn = 31, tp = 290
+y_pred: 0 = 2725 | 1 = 545
+y_true: 0 = 2949 | 1 = 321
+auc=0.9617|aupr=0.6768|ppvn=0.6449
+
+3 ****Test-1  Epoch-193/200: Loss = 0.029898
+******* Test-1  *******
+tn = 170, fp = 33, fn = 8, tp = 12
+y_pred: 0 = 178 | 1 = 45
+y_true: 0 = 203 | 1 = 20
+auc=0.8648|aupr=0.4146|ppvn=0.3500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-194/200 | Loss = 0.0072
+******* Training  *******
+tn = 10735, fp = 1062, fn = 71, tp = 11726
+y_pred: 0 = 10806 | 1 = 12788
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9865|aupr=0.9834|ppvn=0.9489
+
+3 ****Validation  Epoch-194/200: Loss = 0.013720
+******* Validation  *******
+tn = 2652, fp = 297, fn = 22, tp = 299
+y_pred: 0 = 2674 | 1 = 596
+y_true: 0 = 2949 | 1 = 321
+auc=0.9638|aupr=0.7024|ppvn=0.6636
+
+3 ****Test-1  Epoch-194/200: Loss = 0.023868
+******* Test-1  *******
+tn = 174, fp = 29, fn = 7, tp = 13
+y_pred: 0 = 181 | 1 = 42
+y_true: 0 = 203 | 1 = 20
+auc=0.8916|aupr=0.4571|ppvn=0.5000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-195/200 | Loss = 0.0073
+******* Training  *******
+tn = 10718, fp = 1079, fn = 70, tp = 11727
+y_pred: 0 = 10788 | 1 = 12806
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9866|aupr=0.9838|ppvn=0.9472
+
+3 ****Validation  Epoch-195/200: Loss = 0.013628
+******* Validation  *******
+tn = 2712, fp = 237, fn = 29, tp = 292
+y_pred: 0 = 2741 | 1 = 529
+y_true: 0 = 2949 | 1 = 321
+auc=0.9635|aupr=0.6908|ppvn=0.6667
+
+3 ****Test-1  Epoch-195/200: Loss = 0.030197
+******* Test-1  *******
+tn = 178, fp = 25, fn = 8, tp = 12
+y_pred: 0 = 186 | 1 = 37
+y_true: 0 = 203 | 1 = 20
+auc=0.8613|aupr=0.4029|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-196/200 | Loss = 0.0074
+******* Training  *******
+tn = 10696, fp = 1101, fn = 80, tp = 11717
+y_pred: 0 = 10776 | 1 = 12818
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9865|aupr=0.9832|ppvn=0.9468
+
+3 ****Validation  Epoch-196/200: Loss = 0.013485
+******* Validation  *******
+tn = 2680, fp = 269, fn = 22, tp = 299
+y_pred: 0 = 2702 | 1 = 568
+y_true: 0 = 2949 | 1 = 321
+auc=0.9635|aupr=0.6818|ppvn=0.6573
+
+3 ****Test-1  Epoch-196/200: Loss = 0.034368
+******* Test-1  *******
+tn = 177, fp = 26, fn = 6, tp = 14
+y_pred: 0 = 183 | 1 = 40
+y_true: 0 = 203 | 1 = 20
+auc=0.8667|aupr=0.4706|ppvn=0.4500
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-197/200 | Loss = 0.0070
+******* Training  *******
+tn = 10746, fp = 1051, fn = 59, tp = 11738
+y_pred: 0 = 10805 | 1 = 12789
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9874|aupr=0.9844|ppvn=0.9494
+
+3 ****Validation  Epoch-197/200: Loss = 0.014793
+******* Validation  *******
+tn = 2672, fp = 277, fn = 28, tp = 293
+y_pred: 0 = 2700 | 1 = 570
+y_true: 0 = 2949 | 1 = 321
+auc=0.9629|aupr=0.7017|ppvn=0.6511
+
+3 ****Test-1  Epoch-197/200: Loss = 0.040447
+******* Test-1  *******
+tn = 176, fp = 27, fn = 7, tp = 13
+y_pred: 0 = 183 | 1 = 40
+y_true: 0 = 203 | 1 = 20
+auc=0.8480|aupr=0.3886|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-198/200 | Loss = 0.0073
+******* Training  *******
+tn = 10737, fp = 1060, fn = 72, tp = 11725
+y_pred: 0 = 10809 | 1 = 12785
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9862|aupr=0.9827|ppvn=0.9470
+
+3 ****Validation  Epoch-198/200: Loss = 0.016347
+******* Validation  *******
+tn = 2643, fp = 306, fn = 18, tp = 303
+y_pred: 0 = 2661 | 1 = 609
+y_true: 0 = 2949 | 1 = 321
+auc=0.9630|aupr=0.6952|ppvn=0.6604
+
+3 ****Test-1  Epoch-198/200: Loss = 0.037000
+******* Test-1  *******
+tn = 167, fp = 36, fn = 5, tp = 15
+y_pred: 0 = 172 | 1 = 51
+y_true: 0 = 203 | 1 = 20
+auc=0.8485|aupr=0.3950|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-199/200 | Loss = 0.0073
+******* Training  *******
+tn = 10723, fp = 1074, fn = 65, tp = 11732
+y_pred: 0 = 10788 | 1 = 12806
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9862|aupr=0.9828|ppvn=0.9461
+
+3 ****Validation  Epoch-199/200: Loss = 0.014914
+******* Validation  *******
+tn = 2648, fp = 301, fn = 24, tp = 297
+y_pred: 0 = 2672 | 1 = 598
+y_true: 0 = 2949 | 1 = 321
+auc=0.9607|aupr=0.6707|ppvn=0.6386
+
+3 ****Test-1  Epoch-199/200: Loss = 0.028173
+******* Test-1  *******
+tn = 171, fp = 32, fn = 7, tp = 13
+y_pred: 0 = 178 | 1 = 45
+y_true: 0 = 203 | 1 = 20
+auc=0.8786|aupr=0.4472|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+3****Training: Epoch-200/200 | Loss = 0.0069
+******* Training  *******
+tn = 10752, fp = 1045, fn = 62, tp = 11735
+y_pred: 0 = 10814 | 1 = 12780
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9880|aupr=0.9853|ppvn=0.9502
+
+3 ****Validation  Epoch-200/200: Loss = 0.014184
+******* Validation  *******
+tn = 2688, fp = 261, fn = 31, tp = 290
+y_pred: 0 = 2719 | 1 = 551
+y_true: 0 = 2949 | 1 = 321
+auc=0.9617|aupr=0.6914|ppvn=0.6511
+
+3 ****Test-1  Epoch-200/200: Loss = 0.028867
+******* Test-1  *******
+tn = 181, fp = 22, fn = 10, tp = 10
+y_pred: 0 = 191 | 1 = 32
+y_true: 0 = 203 | 1 = 20
+auc=0.8611|aupr=0.4186|ppvn=0.4000
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+====================================================================================================
+Training completed; starting final evaluation of the two saved best models
+Final reference threshold: 0.5
+====================================================================================================
+
+====================================================================================================
+Evaluating the saved best model: Test-PPVn exploratory
+  checkpoint: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_test1_ppvn_epoch121_PPVN0p550000.pkl
+  epoch: 121
+  selection_score: 0.55
+  threshold: 0.5
+====================================================================================================
+
+=== 1. Training-set evaluation ===
+3 ****Test-PPVn exploratory | Training  Epoch-121/200: Loss = 0.008937
+******* Test-PPVn exploratory | Training  *******
+tn = 10428, fp = 1369, fn = 81, tp = 11716
+y_pred: 0 = 10509 | 1 = 13085
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9799|aupr=0.9751|ppvn=0.9335
+
+=== 2. Validation-set evaluation ===
+3 ****Test-PPVn exploratory | Validation  Epoch-121/200: Loss = 0.014572
+******* Test-PPVn exploratory | Validation  *******
+tn = 2574, fp = 375, fn = 13, tp = 308
+y_pred: 0 = 2587 | 1 = 683
+y_true: 0 = 2949 | 1 = 321
+auc=0.9556|aupr=0.6265|ppvn=0.5950
+
+=== 3. Test-1-set evaluation ===
+3 ****Test-PPVn exploratory | Test-1  Epoch-121/200: Loss = 0.032533
+******* Test-PPVn exploratory | Test-1  *******
+tn = 143, fp = 60, fn = 2, tp = 18
+y_pred: 0 = 145 | 1 = 78
+y_true: 0 = 203 | 1 = 20
+auc=0.9015|aupr=0.4834|ppvn=0.5500
+
+====================================================================================================
+Epoch-121 | Test-PPVn exploratory | Test-1 Full evaluation results
+====================================================================================================
+ROC-AUC : 0.901478
+AUPR    : 0.483409
+PPVn    : 0.550000
+TN      : 143
+FP      : 60
+FN      : 2
+TP      : 18
+====================================================================================================
+
+====================================================================================================
+Evaluating the saved best model: Val-AUPR primary
+  checkpoint: ./checkpoints/hlaii_lora/seed_20220909/3_lora_full_r8_frac-100_none_core-full_alpha_reverse_best_val_aupr_epoch182_AUPR0p702435.pkl
+  epoch: 182
+  selection_score: 0.7024346434262156
+  threshold: 0.5
+====================================================================================================
+
+=== 1. Training-set evaluation ===
+3 ****Val-AUPR primary | Training  Epoch-182/200: Loss = 0.006675
+******* Val-AUPR primary | Training  *******
+tn = 10816, fp = 981, fn = 65, tp = 11732
+y_pred: 0 = 10881 | 1 = 12713
+y_true: 0 = 11797 | 1 = 11797
+auc=0.9895|aupr=0.9874|ppvn=0.9527
+
+=== 2. Validation-set evaluation ===
+3 ****Val-AUPR primary | Validation  Epoch-182/200: Loss = 0.014040
+******* Val-AUPR primary | Validation  *******
+tn = 2648, fp = 301, fn = 18, tp = 303
+y_pred: 0 = 2666 | 1 = 604
+y_true: 0 = 2949 | 1 = 321
+auc=0.9646|aupr=0.7024|ppvn=0.6636
+
+=== 3. Test-1-set evaluation ===
+3 ****Val-AUPR primary | Test-1  Epoch-182/200: Loss = 0.030688
+******* Val-AUPR primary | Test-1  *******
+tn = 174, fp = 29, fn = 6, tp = 14
+y_pred: 0 = 180 | 1 = 43
+y_true: 0 = 203 | 1 = 20
+auc=0.8744|aupr=0.4408|ppvn=0.3500
+
+====================================================================================================
+Epoch-182 | Val-AUPR primary | Test-1 Full evaluation results
+====================================================================================================
+ROC-AUC : 0.874384
+AUPR    : 0.440796
+PPVn    : 0.350000
+TN      : 174
+FP      : 29
+FN      : 6
+TP      : 14
+====================================================================================================
+
+====================================================================================================
+Final evaluation summary of the two best models (printed only; not saved as CSV):
+====================================================================================================
+            model_name  selection_score  selection_epoch  threshold  train_roc_auc  train_aupr  train_ppvn  val_roc_auc  val_aupr  val_ppvn  val_tn  val_fp  val_fn  val_tp  test1_roc_auc  test1_aupr  test1_ppvn  test1_tn  test1_fp  test1_fn  test1_tp
+ Test-PPVn exploratory         0.550000              121        0.5       0.979851    0.975119    0.933458     0.955607  0.626470  0.595016    2574     375      13     308       0.901478    0.483409        0.55       143        60         2        18
+      Val-AUPR primary         0.702435              182        0.5       0.989464    0.987413    0.952700     0.964570  0.702435  0.663551    2648     301      18     303       0.874384    0.440796        0.35       174        29         6        14
+Total training time: 1126.44 sec
